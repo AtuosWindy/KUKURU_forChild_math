@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>計算チャレンジ</title>
+</head>
+
+<body>
+
+<h1>計算チャレンジ</h1>
+
+<p id="timer">残り時間: 30</p>
+
+<div id="problem"></div>
+<div id="problem-randPlusMinus"></div>
+
+<button onclick="loadProblem()">問題を出す</button>
+
+<script>
+
+let correct
+count_correct = 0
+count_problem = 0
+
+let time = 30
+let timer
+
+//window.onload = loadProblem
+//window.onload = loadProblem_PM
+window.onload = function(){
+	startTimer()
+	loadProblem_PM()
+}
+
+async function loadProblem() {
+
+	const res = await fetch("http://127.0.0.1:8000/problem")
+	const data = await res.json()
+
+	correct = data.answer
+
+	document.getElementById("problem").innerText =
+		data.a + " + " + data.b + " = ?"
+
+	document.getElementById("answer").value = ""
+	count_problem++
+}
+
+async function loadProblem_PM() {
+
+	const res = await fetch("http://127.0.0.1:8000/problem-randPlusMinus")
+	const data = await res.json()
+
+	correct = data.answer
+
+	if(data.op == "+"){
+		document.getElementById("problem-randPlusMinus").innerText =
+			data.a + " + " + data.b + " = ?"
+	} else {
+		document.getElementById("problem-randPlusMinus").innerText =
+			data.a + " - " + data.b + " = ?"
+	}
+
+	document.getElementById("answer").value = ""
+	count_problem++
+}
+
+function check() {
+
+	const user = Number(document.getElementById("answer").value)
+
+	if (user === correct) {
+		count_correct++
+		document.getElementById("result").innerText = "正解！ - 正答率 : " + count_correct + "/" + count_problem + "問"
+		//loadProblem()
+		loadProblem_PM()
+	} else {
+		document.getElementById("result").innerText = "ちがうよ！ - 正答率" + count_correct + "/" + count_problem + "問"
+	}
+}
+
+function startTimer(){
+
+	timer = setInterval(function(){
+
+		time--
+		document.getElementById("timer").innerText =
+			"残り時間: " + time
+
+		if(time <= 0){
+			clearInterval(timer)
+
+			document.getElementById("problem").innerText =
+				"終了！"
+
+			document.getElementById("result").innerText =
+				"結果 : " + count_correct + "/" + count_problem + "問"
+		}
+
+	},1000)
+
+}
+</script>
+
+<input id="answer">
+
+<button onclick="check()">回答</button>
+
+<p id="result"></p>
+
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KUKURU</title>
+</head>
+
+<body>
+
+<h1>KUKURU</h1>
+
+<button onclick="startGame()">はじめる</button>
+
+{% if not grade %}
+
+<h2>学年を選んでね</h2>
+
+<a href="/home?grade=1">1年生</a>
+<a href="/home?grade=2">2年生</a>
+<a href="/home?grade=3">3年生</a>
+<a href="/home?grade=4">4年生</a>
+<a href="/home?grade=5">5年生</a>
+<a href="/home?grade=6">6年生</a>
+
+{% endif %}
+
+{% if grade and not subject %}
+
+<h2>単元を選んでね</h2>
+
+<a href="/home?grade={{grade}}&subject=1">単元１</a>
+<a href="/home?grade={{grade}}&subject=2">単元２</a>
+<a href="/home?grade={{grade}}&subject=3">単元３</a>
+<a href="/home?grade={{grade}}&subject=4">単元４</a>
+
+{% endif %}
+
+{% if grade and subject %}
+
+<h2>難易度</h2>
+
+<a href="/start?grade={{grade}}&subject={{subject}}&difficulty=1">
+かんたん
+</a>
+
+<a href="/start?grade={{grade}}&subject={{subject}}&difficulty=2">
+ふつう
+</a>
+
+<a href="/start?grade={{grade}}&subject={{subject}}&difficulty=3">
+むずかしい
+</a>
+
+{% endif %}
+
+<script src="/static/app.js"></script>
+
+<script>
+async function start(){
+    await fetch("/start");
+    location.href="/problem";
+}
+</script>
+
+</body>
+</html>
