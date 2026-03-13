@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from engine.generator import generate_problem
+from engine.problem_generator.subject_map import SUBJECT_NAME_MAP
 
 router = APIRouter()
 
@@ -20,7 +21,8 @@ def home(
         {
             "request": request,
             "grade": grade,
-            "subject": subject
+            "subject": subject,
+            "subject_names": SUBJECT_NAME_MAP.get(grade)
         }
     )
 
