@@ -173,7 +173,7 @@ def subject_6003(difficulty: int):
         return x_add(value, value2)
     elif op == "-":
         return x_sub(value, value2)
-    elif op == "-":
+    elif op == "×":
         return x_mul(value, value2)
     elif op == "÷":
         return x_div(value, value2)

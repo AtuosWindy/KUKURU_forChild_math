@@ -4,7 +4,7 @@ def format_rem(q, r):
     if r == 0:
         return f"{q}"
     else:
-        return f"{q} あまり {r}"
+        return f"{q}あまり{r}"
 
 def generate(answer):
 
@@ -20,9 +20,9 @@ def generate(answer):
         dr = random.choice([-1,1])
 
         new_q = max(0, q + dq)
-        new_r = max(1, r + dr)
+        new_r = max(0, r + dr)
         if new_r == b:
-            new_r -= random.randint(1,b-1)
+            new_r = b - 1 if b > 1 else 0
 
         choices.add((new_q,new_r))
 
