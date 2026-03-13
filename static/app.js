@@ -45,11 +45,17 @@ async function loadProblem(){
 
             count++;
 
+            let isCorrect = false;
+
             if(data.choices[i] == data.answer){
+                isCorrect = true;
+            }
+
+            if(isCorrect){
                 lastResult = "せいかい！🎉";
                 correct++;
             }else{
-                lastResult = "ちがうよ！";
+                lastResult = "おしい！";
             }
 
             loadProblem();

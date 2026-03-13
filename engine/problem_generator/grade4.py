@@ -79,23 +79,8 @@ def subject_4002(difficulty: int):
 
     #2値を決める
     b = random.randint(value2,9)
-    count100 = 1
-    count10 = 1
-    count10_flag = 0
-    a = b
-    while a < 100:
-        if count100 > 1:
-            count100 += 1
-            a = b
-        a *= count100
-        if a > 10 and count10_flag == 0:
-            count10 = count100
-            count10_flag = 1
-
-    count100 -= -1
-    mul = random.randint(count10,count100)
-    a = b*mul
-
+    mul = random.randint(2, 99 // b)
+    a = b * mul
     return {
         "a": a,
         "op": "÷",
@@ -121,13 +106,14 @@ def subject_4003(difficulty: int):
     answer = {
         "q": a // b,
         "r": a % b,
+        "b": b,
     }
 
     return {
         "a": a,
         "op": "÷",
         "b": b,
-        "answer": a // b,
+        "answer": answer,
         "answer_type": "rem",
         "q_type": "normal",
     }

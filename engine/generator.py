@@ -38,16 +38,13 @@ def generate_problem(grade: int, subject: int, difficulty: int):
     elif answer_type == "rem":
         choices = remain.generate(answer)
 
-    elif answer_type == "rem":
-        choices = remain.generate(answer)
-
         q = answer["q"]
         r = answer["r"]
 
         if r == 0:
             answer = f"{q}"
         else:
-            answer = f"{q} あまり {r}"
+            answer = f"{q}あまり{r}"
 
     elif answer_type == "fra":
         choices = fraction.generate(answer)
@@ -60,5 +57,6 @@ def generate_problem(grade: int, subject: int, difficulty: int):
     return {
         "question": question,
         "choices": choices,
-        "answer": answer
+        "answer": answer,
+        "answer_type": answer_type
     }
