@@ -1,28 +1,23 @@
 let startTime = Date.now(); /* 開始時間を保存する変数 */
-let correct = 0;            /* 正解数を保存する変数 */
+let endTime = 0;            /* 終了時間を保存する変数 */
+let time;                   /* 経過時間を保存する変数 */
+
 let count = 0;              /* 解いた問題数を保存する変数 */
+let correct = 0;            /* 正解数を保存する変数 */
+let rate = 0;               /* 正答率を保存する変数 */
 
 let lastResult = "";        /* 前問の判定結果を保存する変数 */
 
 let wrongProblems = [];     /* まちがえた問題を保存する配列 */
+let wrongCount = 0;         /* まちがえた問題数を保存する変数 */
 let currentProblem = null;  /* 現在の問題を保存する変数 */
 
-let problems = [];
-let problemIndex = 0;
+let maxNum = 0;             /* 出題される数の最大値を保存する変数 */
 
-function formatFraction(frac){
+let problems = [];          /* API(または間違えた問題リスト)から取得した問題を保存する配列 */
+let problemIndex = 0;       /* 出題する問題のインデックスを保存する変数 */
 
-    if(!frac.includes("/")) return frac;
-
-    let parts = frac.split("/");
-
-    return `
-    <span class="fraction">
-        <span>${parts[0]}</span>
-        <span>${parts[1]}</span>
-    </span>
-    `;
-}
+let retry_flag = false;     /* もう一度やるかどうかのフラグ */
 
 function submitAnswer(){
 
@@ -96,27 +91,39 @@ async function loadProblem(){
     document.getElementById("r").value = "";
 
     /* 前問の判定結果を表示 */
-    document.getElementById("result").innerText = lastResult;
-    
+    if(!(retry_flag & count == 0)){
+        document.getElementById("result").innerText = lastResult;
+    }
+
     /* 進捗バーを表示 */
-    let percent = (count / MAX_PROBLEM) * 100;
+    let percent = (!retry_flag) ? (count / MAX_PROBLEM) * 100 : (count / wrongProblems.length) * 100;
 
     document.getElementById("progress-fill").style.width =
     percent + "%";
 
+
+    /* まちがえた問題をもう一回やる場合は、出題される数の最大値をまちがえた問題数にする */
+    maxNum = (!retry_flag) ? MAX_PROBLEM : wrongCount;
+
+
     /* 最後まで問題を解き終わった場合の処理 */
-    if(count >= MAX_PROBLEM){
+    if(count >= maxNum){
         /* 計測時間・正答率を計算 */
-        let endTime = Date.now();
-        let time = (endTime - startTime) / 1000;
-        let rate = correct / MAX_PROBLEM * 100;
+        if(!retry_flag){
+            endTime = Date.now();
+            time = (endTime - startTime) / 1000;
+            rate = correct / MAX_PROBLEM * 100;
+        }
 
         /* まちがえた問題があればもう一回やる */        
         if(wrongProblems.length > 0){
 
+            retry_flag = true;
+
+            count = 0;
+            wrongCount = wrongProblems.length;
             problems = wrongProblems;
             wrongProblems = [];
-            count = 0;
 
             alert("まちがえた問題をもう一回やろう！");
             loadProblem();
@@ -131,7 +138,7 @@ async function loadProblem(){
     }
 
     document.getElementById("progress").innerText =
-        (count + 1) + " / " + MAX_PROBLEM;
+        (count + 1) + " / " + maxNum;
 
 
     /* APIから問題を取得 */
@@ -140,7 +147,7 @@ async function loadProblem(){
 
 
     /* 現在の問題を保存 */
-    const problem = data.problem;
+    const problem = (!retry_flag) ? data.problem : problems[count];
 
     currentProblem = problem;
 
@@ -170,7 +177,6 @@ async function loadProblem(){
             document.getElementById("input-fraction").style.display="none";
             document.getElementById("input-remain").style.display="block";
         }
-
     }
 
     /* 難易度が1の場合のみ選択肢のボタンを表示 */
@@ -201,10 +207,10 @@ async function loadProblem(){
 
             if(isCorrect){
                 lastResult = "せいかい！🎉";
-                correct++;
+                correct += (!retry_flag) ? 1 : 0;
             }else{
                 lastResult = "おしい！";
-                wrongProblems.push(problem);
+                wrongProblems.push(currentProblem);
             }
 
             loadProblem();

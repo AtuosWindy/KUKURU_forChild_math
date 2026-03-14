@@ -83,11 +83,11 @@ def subject_5003(difficulty: int):
         return -1, "error", -1, -1, -1
 
     #分母を決める
-    a = random.randint(2,value)	#分母(前)
+    a = random.randint(2,value)	    #分母(前)
     b = random.randint(1, value2)	#分母(後)
 
     #分子を決める
-    c = random.randint(2,value)	#分母(前)
+    c = random.randint(2,value)	    #分母(前)
     d = random.randint(1, value2)	#分母(後)
 
     #答えを算出する
@@ -114,11 +114,11 @@ def subject_5004(difficulty: int):
         return -1, "error", -1, -1, -1
 
     #分母を決める
-    a = random.randint(2,value)	#分母(前)
+    a = random.randint(2,value)	    #分母(前)
     b = random.randint(1, value2)	#分母(後)
 
     #分子を決める
-    c = random.randint(2,value)	#分母(前)
+    c = random.randint(2,value)	    #分母(前)
     d = random.randint(1, value2)	#分母(後)
 
     #分数生成
