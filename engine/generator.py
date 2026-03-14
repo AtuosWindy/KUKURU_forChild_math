@@ -47,7 +47,11 @@ def generate_problem(grade: int, subject: int, difficulty: int):
             answer = f"{q}あまり{r}"
 
     elif answer_type == "fra":
+
         choices = fraction.generate(answer)
+
+        answer = str(answer)
+        choices = [str(c) for c in choices]
 
     else:
         raise ValueError(f"Unknown answer_type: {answer_type}")
