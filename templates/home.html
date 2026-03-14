@@ -26,7 +26,6 @@
     <h1>KUKURU</h1>
 
     <!--<button onclick="startGame()">はじめる</button>-->
-
     {% if not grade %}
 
         <h2>学年を選んでね</h2>
@@ -58,13 +57,17 @@
 
         <h2>難易度</h2>
 
-        <a class="btn" href="/start?grade={{grade}}&subject={{subject}}&difficulty=1">
-            かんたん
-        </a>
+        {% if not(grade == 6 and subject == 4) %}
 
-        <a class="btn" href="/start?grade={{grade}}&subject={{subject}}&difficulty=2">
-            ふつう
-        </a>
+            <a class="btn" href="/start?grade={{grade}}&subject={{subject}}&difficulty=1">
+                かんたん
+            </a>
+
+            <a class="btn" href="/start?grade={{grade}}&subject={{subject}}&difficulty=2">
+                ふつう
+            </a>
+
+        {% endif %}
 
         <a class="btn" href="/start?grade={{grade}}&subject={{subject}}&difficulty=3">
             むずかしい
@@ -76,8 +79,8 @@
 
     <script>
         async function start(){
-            await fetch("/start");
-            location.href="/problem";
+        await fetch("/start");
+        location.href="/problem";
         }
     </script>
 

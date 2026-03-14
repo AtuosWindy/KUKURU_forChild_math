@@ -7,6 +7,23 @@ let lastResult = "";        /* 前問の判定結果を保存する変数 */
 let wrongProblems = [];     /* まちがえた問題を保存する配列 */
 let currentProblem = null;  /* 現在の問題を保存する変数 */
 
+let problems = [];
+let problemIndex = 0;
+
+function formatFraction(frac){
+
+    if(!frac.includes("/")) return frac;
+
+    let parts = frac.split("/");
+
+    return `
+    <span class="fraction">
+        <span>${parts[0]}</span>
+        <span>${parts[1]}</span>
+    </span>
+    `;
+}
+
 function submitAnswer(){
 
     let userAnswer = "";
@@ -69,6 +86,15 @@ function submitAnswer(){
 }
 
 async function loadProblem(){
+    /* 入力欄を空にする */
+    document.getElementById("answer-input").value = "";
+
+    document.getElementById("num").value = "";
+    document.getElementById("den").value = "";
+
+    document.getElementById("q").value = "";
+    document.getElementById("r").value = "";
+
     /* 前問の判定結果を表示 */
     document.getElementById("result").innerText = lastResult;
     
