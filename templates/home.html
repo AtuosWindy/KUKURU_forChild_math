@@ -1,57 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>KUKURU</title>
+    <style>
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 8px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+            .btn:hover {
+                background: #45a049;
+            }
+    </style>
+    <title>KUKURU</title>
 </head>
 
 <body>
 
     <h1>KUKURU</h1>
 
-    <button onclick="startGame()">はじめる</button>
+    <!--<button onclick="startGame()">はじめる</button>-->
 
     {% if not grade %}
 
-    <h2>学年を選んでね</h2>
+        <h2>学年を選んでね</h2>
 
-    <a href="/home?grade=1">1年生</a>
-    <a href="/home?grade=2">2年生</a>
-    <a href="/home?grade=3">3年生</a>
-    <a href="/home?grade=4">4年生</a>
-    <a href="/home?grade=5">5年生</a>
-    <a href="/home?grade=6">6年生</a>
+        <a class="btn" href="/home?grade=1">1年生</a>
+        <a class="btn" href="/home?grade=2">2年生</a>
+        <a class="btn" href="/home?grade=3">3年生</a>
+        <a class="btn" href="/home?grade=4">4年生</a>
+        <a class="btn" href="/home?grade=5">5年生</a>
+        <a class="btn" href="/home?grade=6">6年生</a>
 
     {% endif %}
 
     {% if grade and not subject %}
 
-    <h2>単元を選んでね</h2>
+        <h2>単元を選んでね</h2>
 
-    {% for id, name in subject_names.items() %}
+        {% for id, name in subject_names.items() %}
 
-    <a href="/home?grade={{grade}}&subject={{id}}">
-        {{name}}
-    </a><br>
+            <a class="btn" href="/home?grade={{grade}}&subject={{id % 1000}}">
+                {{name}}
+            </a><br>
 
-    {% endfor %}
+        {% endfor %}
 
     {% endif %}
 
     {% if grade and subject %}
 
-    <h2>難易度</h2>
+        <h2>難易度</h2>
 
-    <a href="/start?grade={{grade}}&subject={{subject}}&difficulty=1">
-        かんたん
-    </a>
+        <a class="btn" href="/start?grade={{grade}}&subject={{subject}}&difficulty=1">
+            かんたん
+        </a>
 
-    <a href="/start?grade={{grade}}&subject={{subject}}&difficulty=2">
-        ふつう
-    </a>
+        <a class="btn" href="/start?grade={{grade}}&subject={{subject}}&difficulty=2">
+            ふつう
+        </a>
 
-    <a href="/start?grade={{grade}}&subject={{subject}}&difficulty=3">
-        むずかしい
-    </a>
+        <a class="btn" href="/start?grade={{grade}}&subject={{subject}}&difficulty=3">
+            むずかしい
+        </a>
 
     {% endif %}
 
@@ -59,8 +76,8 @@
 
     <script>
         async function start(){
-        await fetch("/start");
-        location.href="/problem";
+            await fetch("/start");
+            location.href="/problem";
         }
     </script>
 

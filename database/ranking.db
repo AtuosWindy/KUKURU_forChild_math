@@ -1,0 +1,9 @@
+CREATE TABLE ranking(
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    grade INTEGER,
+    subject INTEGER,
+    rate REAL,
+    time REAL,
+    date TEXT
+);

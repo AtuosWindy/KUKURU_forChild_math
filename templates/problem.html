@@ -1,21 +1,80 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <style>
 
+        #progress-bar {
+            width: 300px;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #4CAF50;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .fraction {
+            display: inline-block;
+            text-align: center;
+        }
+
+        .fraction span:first-child {
+            border-bottom: 1px solid black;
+            display: block;
+        }
+    </style>
+
+    <script>
+        const MAX_PROBLEM = {{count}};
+    </script>
+</head>
 <body>
+    <div id="progress-bar">
+        <div id="progress-fill"></div>
+    </div>
+    <div id="progress"></div>
 
-<h2 id="progress"></h2>
-<h1 id="question"></h1>
+    <h1 id="question"></h1>
 
-<div id="result"></div>
+    <div id="result"></div>
 
-<div>
-  <button class="choice"></button>
-  <button class="choice"></button>
-  <button class="choice"></button>
-  <button class="choice"></button>
-</div>
+    <!-- 難易度が "かんたん" の場合 -->
+    <div id="choices-area">
+        <button class="choice"></button>
+        <button class="choice"></button>
+        <button class="choice"></button>
+        <button class="choice"></button>
+    </div>
 
-<script src="/static/app.js"></script>
+
+    <!-- 難易度が "ふつう" or "むずかしい" の場合 -->
+    <div id="input-area" style="display:none;">
+
+        <div id="input-int-dec">
+            <input id="answer-input">
+        </div>
+
+        <div id="input-fraction" style="display:none;">
+            <input id="num"> /
+            <input id="den">
+        </div>
+
+        <div id="input-remain" style="display:none;">
+            <input id="q"> あまり
+            <input id="r">
+        </div>
+
+        <button onclick="submitAnswer()">こたえ</button>
+
+    </div>
+
+    <script src="/static/app.js"></script>
 
 </body>
 </html>

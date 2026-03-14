@@ -1,24 +1,27 @@
 import random
-from engine.problem_generator.subject_map import SUBJECT_MAP
-from engine.choice_generator import integer
-from engine.choice_generator import decimal
-from engine.choice_generator import remain
-from engine.choice_generator import fraction
+from engine.subjects.subject_map import SUBJECT_MAP
+from engine.choices import integer
+from engine.choices import decimal
+from engine.choices import remain
+from engine.choices import fraction
 
 
 def generate_problem(grade: int, subject: int, difficulty: int):
     print("DEBUG:", grade, subject, difficulty)
 
-    func = SUBJECT_MAP[grade * 1000 + subject]
+    data = SUBJECT_MAP[grade * 1000 + subject]
 
-    p = func(difficulty)
+    func = data["func"]
+    problem = func(difficulty)
 
-    a = p["a"]
-    op = p["op"]
-    b = p["b"]
-    answer = p["answer"]
-    answer_type = p["answer_type"]
-    q_type = p["q_type"]
+    count = data["count"][difficulty - 1]
+
+    a = problem["a"]
+    op = problem["op"]
+    b = problem["b"]
+    answer = problem["answer"]
+    answer_type = problem["answer_type"]
+    q_type = problem["q_type"]
 
     print("answer_type =", answer_type)
 
@@ -62,5 +65,6 @@ def generate_problem(grade: int, subject: int, difficulty: int):
         "question": question,
         "choices": choices,
         "answer": answer,
-        "answer_type": answer_type
+        "answer_type": answer_type,
+        "difficulty": difficulty
     }

@@ -14,7 +14,10 @@ def problem_page(request: Request):
 
     return templates.TemplateResponse(
         "problem.html",
-        {"request": request}
+        {
+            "request": request,
+            "count": request.session["count"]
+        }
     )
 
 
@@ -23,6 +26,7 @@ def get_problem(request: Request):
 
     index = request.session.get("index", 0)
     problems = request.session.get("problems", [])
+    difficulty = request.session.get("difficulty", 1)
 
     problem = problems[index]
 
@@ -33,7 +37,10 @@ def get_problem(request: Request):
 
     request.session["index"] = index + 1
 
-    return problem
+    return {
+        "problem": problem,
+        "difficulty": difficulty,
+    }
 
 
 @router.get("/result")

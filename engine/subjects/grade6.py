@@ -181,14 +181,11 @@ def subject_6003(difficulty: int):
 
 #6年生, エキストラ問題
 def subject_6004(difficulty: int):
-    #難易度調整は、6004だけは常にMAX想定。”エキストラ”だからね。
-    #これまでのすべての問題の組み合わせで完全ランダムを想定。
-    #ここだけはちょっと特殊になりそうなので一旦後回し。
-    return {
-        "a": 0,
-        "op": "+",
-        "b": 0,
-        "answer": 0,
-        "answer_type": "int",
-        "q_type": "normal",
-    }
+    from engine.subjects.subject_map import SUBJECT_MAP
+
+    keys = [k for k in SUBJECT_MAP.keys() if k != 6004]
+    key = random.choice(keys)
+
+    func = SUBJECT_MAP[key]["func"]
+
+    return func(difficulty)

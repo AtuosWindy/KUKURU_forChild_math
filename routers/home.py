@@ -2,8 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from engine.generator import generate_problem
-from engine.problem_generator.subject_map import SUBJECT_NAME_MAP
+from engine.generator import SUBJECT_MAP, generate_problem
 
 router = APIRouter()
 
@@ -16,13 +15,22 @@ def home(
     subject: int | None = None
 ):
 
+    subject_names = None
+
+    if grade:
+        subject_names = {
+            k: v["name"]
+            for k, v in SUBJECT_MAP.items()
+            if k // 1000 == grade
+        }
+
     return templates.TemplateResponse(
         "home.html",
         {
             "request": request,
             "grade": grade,
             "subject": subject,
-            "subject_names": SUBJECT_NAME_MAP.get(grade)
+            "subject_names": subject_names
         }
     )
 
@@ -36,7 +44,10 @@ def start(
 
     problems = []
 
-    for _ in range(10):
+    data = SUBJECT_MAP[grade * 1000 + subject]
+    count = data["count"][difficulty - 1]
+
+    for _ in range(count):
         problems.append(
             generate_problem(grade, subject, difficulty)
         )
@@ -44,6 +55,7 @@ def start(
     request.session["grade"] = grade
     request.session["subject"] = subject
     request.session["difficulty"] = difficulty
+    request.session["count"] = count
 
     request.session["index"] = 0
     request.session["problems"] = problems
