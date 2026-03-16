@@ -15,7 +15,7 @@ def home(
     subject: int | None = None
 ):
 
-    subject_names = None
+    subject_names = {}
 
     if grade:
         subject_names = {
@@ -28,9 +28,7 @@ def home(
         "home.html",
         {
             "request": request,
-            "grade": grade,
-            "subject": subject,
-            "subject_names": subject_names
+            "subject_map": SUBJECT_MAP,
         }
     )
 

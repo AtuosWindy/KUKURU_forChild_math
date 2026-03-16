@@ -1,16 +1,21 @@
+※各単元ごとの「tutorial」ページ(tutorial_1001.html...とか)をどう作ろうか、、、検討中。
+　(ここまで作ってたら設定期限に間に合わんかもなぁ。。)
+
 Study_Child_001_KUKURU
 │
 ├ main.py                ← FastAPI入口
+├ index.html            ←「/」のルートにしようかなって検討中
 │
 ├ routers                ← APIルーティング
 │   ├ home.py
 │   ├ problem.py
-│   └ ranking.py
+│   ├ ranking.py
+│   └ result.py
 │
 ├ engine                 ← 問題生成エンジン
-｜   ├ generator.py		←今はここで足し算記述してた！
+｜   ├ generator.py		←問題生成するだけのアルゴリズム(各gradeX.pyを呼び出して作っていく)
 │   ├ subjects	←これらの中に問題・回答生成アルゴリズム入ってる！return a, op(演算子"+","-","×","÷"), b, answerっていう返り値で統一。
-│   │   ├ subject_map.py	←関数マッピング
+│   │   ├ subject_map.py	←関数マッピング(各単元ごとの関数名、難易度別の出題数、Webページに選択ボタンに表示する用の単元名...を記載。)
 │   │   ├ basic_routine.py	←下のgrade1~6.pyで使われる共通関数はココで呼び出し
 │   │   ├ grade1.py		←1年生問題。あと、関数はsubject_1001(引数にint型のdifficult...1~3。3が難しい方)のようにフォーマットがある。ここで問題そのものの難易度は決められている。⇒この外で問題数を設定してもらえればよい。
 │   │   ├ grade2.py		←2年生
@@ -34,4 +39,6 @@ Study_Child_001_KUKURU
 └ templates              ← HTML
     ├ home.html
     ├ problem.html
-    └ result.html
+    ├ result.html
+    ├ ranking.html
+    └ tutorial.html

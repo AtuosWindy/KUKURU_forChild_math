@@ -13,13 +13,11 @@
 /tutorial    → チュートリアル画面(各単元の説明,解き方の説明的な画面。要はプチ授業)
 /start       → 問題生成
 /problem     → 問題画面
-/api/problem → 問題データ取得
 /result      → 結果画面
 /ranking	 → ランキング画面
 
-[API]
-/api/problem/start     問題生成
-/api/problem/next      次の問題
+[API] ←ここがよく分からなくて勉強中。今後実装する際に変わる可能性もあるけど、とりあえずこんな感じで考えている
+/api/problem           問題データ取得
 /api/answer            回答送信
 /api/result            結果取得
 /api/ranking           ランキング取得
