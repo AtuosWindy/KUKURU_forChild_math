@@ -1,0 +1,34 @@
+[/home]で扱うデータ
+#ワンセット(ここから)
+・学年(grade = 1~6)
+・単元(subject = 1~4) ... 関数 : "subject_(grade*1000+subject)"が使用される
+・難易度(difficulty = 1~3) ... 出題数、回答形式(1->4択式; 2,3->記述式)
+#ワンセット(ここまで)
+　↓
+・POST /api/start     ← 問題スタート(上3つをサーバに送信)
+
+[/problem]で扱うデータ
+・問題（problem）
+・回答（answer）
+・結果（result）
+ ー ブラウザに表示するデータ：正答率(rate)、タイム(time)、単元名(subject_name)、スコア(score : 算出方法は後日別途改めて相談)、ランキング(rank : .dbと照合する感じかなぁ...これも後日！)
+　　／非表示データ：難易度(difficulty)->出題数を算出(problem_count)、単元番号(subject_number, 例：5004とか←5年生の4番目の単元 "分数 ― 分数")
+　　／上記の中でスコアに用いるデータ：rate, time, subject_name, difficulty->problem_count(単元・出題数セットで生成する予定の、難易度係数的なパラメータを設けようかと。)
+　↓
+・GET  /api/problem     ← 問題取得
+・POST /api/answer      ← 回答送信＆判定
+・GET  /api/result      ← 結果取得
+・POST /api/retry       ← 間違い再挑戦
+
+[/result]で扱うデータ(解いた問題を再度一覧にして表示しようかと思ったけど、、、納期3月ということで出題された問題一覧表示はなしでいきますｗ)
+・結果（result）
+・(新規で)登録情報（regist）
+ ー 登録情報(rankingとしようか) : ニックネーム(nickname)、ユーザの学年(your_grade : これは空欄であればそれでも可/スコアには反映しない...自己申告制のため&小さい子も大きい子も同じ土俵でがんばってほしいから！)
+　　／最終的にdbに保存されるデータ：ニックネーム(nickname)、ユーザの学年(your_grade)、単元名(subject_name)、むずかしさ(difficulty)、出題数(problem_count)、正答率(rate)、タイム(time)、スコア(score)
+　↓
+・GET /api/regist     ← 登録情報取得
+
+[/ranking]で扱うデータ
+・ランキング情報(ranking)     ← ランキングリスト取得(.dbより)
+　↓
+・GET /api/ranking
