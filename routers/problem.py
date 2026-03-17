@@ -42,6 +42,19 @@ def get_problem(request: Request):
         "difficulty": difficulty,
     }
 
+@router.post("/api/answer")
+def answer(request: Request, user_answer: str):
+
+    index = request.session["index"]
+    problems = request.session["problems"]
+
+    correct_answer = problems[index]["answer"]
+
+    is_correct = user_answer == correct_answer
+
+    request.session["index"] += 1
+
+    return {"is_correct": is_correct}
 
 @router.get("/result")
 def result(request: Request, time: float, rate: float):

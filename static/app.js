@@ -229,3 +229,17 @@ document.addEventListener("keydown", function(e){
         submitAnswer();
     }
 });
+
+const res = await fetch("/api/answer", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({answer: userAnswer})
+})
+
+const data = await res.json()
+
+if(data.is_correct){
+    lastResult = "せいかい！🎉"
+}else{
+    lastResult = "おしい！"
+}
