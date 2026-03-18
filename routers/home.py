@@ -2,11 +2,22 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
+from pydantic import BaseModel
+
 from engine.generator import SUBJECT_MAP, generate_problem
+from engine.subjects import grade1
+
+import time
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
+
+class StartRequest(BaseModel):
+    grade: int
+    subject: int
+    difficulty: int
+
 
 @router.get("/home", response_class=HTMLResponse)
 def home(
@@ -32,30 +43,50 @@ def home(
         }
     )
 
-@router.get("/start")
+
+@router.post("/api/start")
 def start(
     request: Request,
-    grade: int,
-    subject: int,
-    difficulty: int
+    data: StartRequest
 ):
+    grade = data.grade
+    subject = data.subject
+    difficulty = data.difficulty
 
+    # 問題生成
     problems = []
 
-    data = SUBJECT_MAP[grade * 1000 + subject]
-    count = data["count"][difficulty - 1]
+    data_map = SUBJECT_MAP[grade * 1000 + subject]
+    count = data_map["count"][difficulty - 1]
 
     for _ in range(count):
         problems.append(
             generate_problem(grade, subject, difficulty)
         )
 
+    #セッションに保存
     request.session["grade"] = grade
-    request.session["subject"] = subject
+    request.session["subject_number"] = subject
     request.session["difficulty"] = difficulty
-    request.session["count"] = count
 
+    request.session["subject_name"] = data_map["name"]
+    request.session["problem_count"] = count
+    request.session["wrong_problem_count"] = 0
+
+    request.session["problems"] = problems  # 正解込み
+    request.session["wrong_problems"] = []  # 間違えのみ
     request.session["index"] = 0
-    request.session["problems"] = problems
+    request.session["correct"] = 0
+    request.session["miss_flag"] = False
+    request.session["retry_flag"] = False
 
-    return RedirectResponse("/problem", status_code=303)
+    request.session["rate"] = 0.0
+    request.session["start_time"] = time.time()
+    request.session["end_time"] = 0
+    request.session["time"] = 0
+    request.session["score"] = 0
+    request.session["rank"] = None
+
+    request.session["your_grade"] = None
+    request.session["nickname"] = None
+

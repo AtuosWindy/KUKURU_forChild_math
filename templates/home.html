@@ -94,23 +94,41 @@
         let selectedSubject = null;
 
         async function start(difficulty){
-        fetch(`/start?grade=${selectedGrade}&subject=${selectedSubject}&difficulty=${difficulty}`);
+
+        await fetch("/api/start",{
+
+        method: "POST",
+
+        headers: {
+        "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+        grade: selectedGrade,
+        subject: selectedSubject,
+        difficulty: difficulty
+        }),
+
+        });
+
         location.href="/problem";
+
         }
+
 
         function selectGrade(grade){
 
-        selectedGrade = grade
+        selectedGrade = grade;
 
         document.querySelectorAll(".subject").forEach(btn=>{
-        btn.style.display="none"
-        })
+        btn.style.display="none";
+        });
 
         document.querySelectorAll(".grade"+grade).forEach(btn=>{
         btn.style.display="inline-block"
-        })
+        });
 
-        showSelectSubject()
+        showSelectSubject();
 
         }
 

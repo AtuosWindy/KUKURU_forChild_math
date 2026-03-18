@@ -10,12 +10,29 @@
 ーーーーーーーーーーーーーーーーーーーーー
 session = {
     "grade": grade,
-    "subject": subject,
+    "subject_number": subject,
     "difficulty": difficulty,
+
+    "subject_name": subject_name,  # 単元名はgradeとsubjectの組み合わせで算出する予定
+    "problem_count": problem_count,  # 出題数は難易度と単元の組み合わせで算出する予定
+    "wrong_problem_count": 0,  # 間違えた問題の数をカウントするための変数
+
     "problems": [...],  # ここで生成（１度キリ！！）
+    "wrong_problems": [],  # ここで、間違えた問題を保存していく予定
     "index": 0,
     "correct": 0,
-    "start_time": now
+    "miss_flag": False,  # 間違えた問題が出た場合のフラグ（もう一度解くかどうか聴く機能が立つ）
+    "retry_flag": False,  # 間違えた問題をもう一度解く機能が立ったときのフラグ（間違えた問題をもう一度解いたかどうか）
+
+    "rate": 0.0,
+    "start_time": now,
+    "end_time": 0,
+    "time": 0,
+    "score": 0.0,
+    "rank": None,
+
+    "your_grade": None,  # 登録情報の学年はセッションに保存しておいて、結果登録のときに一緒に送信する感じかなぁ
+    "nickname": None,  # 登録情報のニックネームもセッションに保存しておいて、結果登録のときに一緒に送信する感じかなぁ
 }
 ーーーーーーーーーーーーーーーーーーーーー
 
