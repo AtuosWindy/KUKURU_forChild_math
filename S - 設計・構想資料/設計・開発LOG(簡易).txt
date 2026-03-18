@@ -68,4 +68,6 @@
 
 
 [ 10日目 ( 3 / 18 [水] ) ]
-・ 
+・ /problem の API 実装の見直しを、設計メモ(各URLで扱うデータ.txt, root_authority.txt)を見ながら実施。
+
+
