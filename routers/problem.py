@@ -229,6 +229,7 @@ def calculate_score(grade: int, subject: int, difficulty: int, problem_count: in
     #算出方法はゲーム業界とかが採用してるようなガチなやつを取り入れようかと検討中。
     return int(score * 1000)  # スコアは整数で、かつ良い値ほど大きくなるように調整
 
+
 @router.post("/api/answer")
 def answer(request: Request, body: AnswerRequest):
     user_answer = body.answer
