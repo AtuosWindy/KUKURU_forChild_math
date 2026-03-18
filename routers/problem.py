@@ -51,33 +51,36 @@ def get_problem(request: Request):
     if index >= p_num:    # 全問解き終わった場合の処理
         #
         # 疑似コード↓
-        # if retry_flag:  # すでに解きなおししてる場合
+        if retry_flag:  # すでに解きなおししてる場合
+            i = 0
         #   /result へ行く処理を追加する
-        # else:  # まだ解きなおししてない場合は、全問解き終わったけど、間違えた問題があるかもしれないので、その場合は解きなおすか問う。タイムはとめる。
+        else:  # まだ解きなおししてない場合は、全問解き終わったけど、間違えた問題があるかもしれないので、その場合は解きなおすか問う。タイムはとめる。
         #   stop_time = ...  # タイムをとめる
         #   time = stop_time - start_time
         #   request.session["stop_time"] = stop_time    #機能的に意味はそこまでないが、コードの構造上あったほうが分かりやすく、さらに将来的に不正操作があった場合のデバッグ材料になるため記録する。
         #   request.session["time"] = time
-        #   rate = correct / problem_count * 100
-        #   grade = request.session["grade"]
-        #   subject = request.session["subject"]
-        #   # problem_count は冒頭でセッションから取得しているからOK！
+            rate = correct / problem_count * 100
+            grade = request.session["grade"]
+            subject = request.session["subject"]
+            # problem_count は冒頭でセッションから取得しているからOK！
         #   score = calculate_score(grade, subject, problem_count, rate, time) # スコアの計算式は要検討。とりあえず、正答率と時間をもとに、スコアを計算する感じでいいと思う。良い値ほど高くする。ランキングの順位は最終的にコレ１つで決める。超重要。
         #   request.session["time"] = time
-        #   request.session["rate"] = rate
+            request.session["rate"] = rate
         #   request.session["score"] = score
-        #   if miss_flag:  # 間違えた問題がある場合
-        #       ユーザに「問題を解きなおすかどうか尋ねる」
-        #       if 「問題を解きなおすかどうか尋ねた結果、ユーザが「解きなおす」と答えた場合」:
-        #        　　retry_flag = True
-        #            index = 0   # 間違えた問題を解きなおす場合に備え、indexをリセット
-        #            request.session["retry_flag"] = retry_flag
-        #            request.session["index"] = index
-        #            request.session["wrong_problem_count"] = len(wrong_problems)
-        #            ↓if分岐を抜けた p_list にて、間違えた問題をリスト0番目から再度解き始める処理が開始
-        #   else:  # 間違えた問題がない場合は、解きなおす必要ないので、そのまま/resultへ行く
-        #       /result へ行く処理を追加する
-        #
+            if miss_flag:  # 間違えた問題がある場合
+                #ユーザに「問題を解きなおすかどうか尋ねる」
+                #if 「問題を解きなおすかどうか尋ねた結果、ユーザが「解きなおす」と答えた場合」:
+                    retry_flag = True
+                    index = 0   # 間違えた問題を解きなおす場合に備え、indexをリセット
+                    request.session["retry_flag"] = retry_flag
+                    request.session["index"] = index
+                    request.session["wrong_problem_count"] = len(wrong_problems)
+                    #↓if分岐を抜けた p_list にて、間違えた問題をリスト0番目から再度解き始める処理が開始
+            else:  # 間違えた問題がない場合は、解きなおす必要ないので、そのまま/resultへ行く
+                i = 0
+                #/result へ行く処理を追加する
+
+        
         return {"status": "finished"}
 
     # retryの場合は間違えた問題を解きなおすため、問題リストを切り替える
