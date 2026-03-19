@@ -23,7 +23,7 @@ def problem_page(request: Request):
         "problem.html",
         {
             "request": request,
-            "count": request.session["count"]
+            "protlem_count": request.session["problem_count"]
         }
     )
 
@@ -53,33 +53,35 @@ def get_problem(request: Request):
         # 疑似コード↓
         if retry_flag:  # すでに解きなおししてる場合
             i = 0
-        #   /result へ行く処理を追加する
+            #/result へ行く処理を追加する
+            return {"status": "finished"}
         else:  # まだ解きなおししてない場合は、全問解き終わったけど、間違えた問題があるかもしれないので、その場合は解きなおすか問う。タイムはとめる。
             start_time = request.session["start_time"]
-            stop_time = start_time  # タイムをとめる
+            stop_time = time.time()
             time = stop_time - start_time
             request.session["stop_time"] = stop_time    #機能的に意味はそこまでないが、コードの構造上あったほうが分かりやすく、さらに将来的に不正操作があった場合のデバッグ材料になるため記録する。
             rate = int(correct / problem_count * 100)
             grade = request.session["grade"]
-            subject = request.session["subject"]
+            subject = request.session["subject_number"]
             # problem_count は冒頭でセッションから取得しているからOK！
             score = calculate_score(grade, subject, difficulty, problem_count, rate, time) # スコアの計算式は要検討。とりあえず、正答率と時間をもとに、スコアを計算する感じでいいと思う。良い値ほど高くする。ランキングの順位は最終的にコレ１つで決める。超重要。
             request.session["time"] = time
             request.session["rate"] = rate
             request.session["score"] = score
             if miss_flag:  # 間違えた問題がある場合
+
                 #ユーザに「問題を解きなおすかどうか尋ねる」
-                #if 「問題を解きなおすかどうか尋ねた結果、ユーザが「解きなおす」と答えた場合」:
+                
+                if 0:   #if 「問題を解きなおすかどうか尋ねた結果、ユーザが「解きなおす」と答えた場合」:
                     retry_flag = True
                     index = 0   # 間違えた問題を解きなおす場合に備え、indexをリセット
                     request.session["retry_flag"] = retry_flag
                     request.session["index"] = index
                     request.session["wrong_problem_count"] = len(wrong_problems)
-                    #↓if分岐を抜けた p_list にて、間違えた問題をリスト0番目から再度解き始める処理が開始
+                    return {"status": "retry_prompt"}
+                return {"status": "retry_prompt"}
             else:  # 間違えた問題がない場合は、解きなおす必要ないので、そのまま/resultへ行く
-                i = 0
-                #/result へ行く処理を追加する
-
+                return {"status": "finished"}
         
         return {"status": "finished"}
 
@@ -257,9 +259,15 @@ def answer(request: Request, body: AnswerRequest):
 
     request.session["index"] += 1
 
-    # ここで/api/problem呼ぶ！
-
     return {"is_correct": is_correct}
+
+
+@router.post("/api/retry")
+def retry(request: Request):
+    request.session["retry_flag"] = True
+    request.session["index"] = 0
+    request.session["wrong_problem_count"] = len(request.session["wrong_problems"])
+    return {"status": "ok"}
 
 
 @router.get("/result")

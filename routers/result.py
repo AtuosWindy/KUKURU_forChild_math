@@ -9,5 +9,5 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 @router.get("/result", response_class=HTMLResponse)
-def result(request: Request, time: float, rate: float):
+def result(request: Request):
     return templates.TemplateResponse()

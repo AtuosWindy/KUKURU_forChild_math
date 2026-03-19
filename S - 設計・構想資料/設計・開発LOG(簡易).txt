@@ -77,4 +77,12 @@
 	: 正答率、タイム、難易度係数を用いて算出することにした。
 	  また、難易度に応じて回答形式が変化するため、そこでかかる時間についても補正するなど考慮した。
 	  最重要事項としては、丁寧に解いた子が評価される算出方法を意識し、また、正答率が極端に低かった子に対しても心が折れないように最低限のスコアとなるようバランスを調整した。
+・ JS ⇔ Python のデータのやりとりの見直し・お勉強を行った↓
+	: PythonからJSに値を渡す場合 - > /api/xxx にて return{} した値が、js側で const yyy = await fetch("/api/xxx") で取得できる。
+																	→さらに、const data = await yyy.json() とすることで、data.xxx などで値を取得できる。
+	  JSからPythonに値を渡す場合 -> js側で const data = { xxx: xxx, yyy: yyy, ... } として、fetch("/api/xxx", { method: "POST", body: JSON.stringify(data) }) とする。
+																							Python側では、@app.post("/api/xxx") の関数の引数に data: dict として受け取ることができる。
+
+
+[ 12日目 ( 3 / 20 [金] ) ]
 ・ 
