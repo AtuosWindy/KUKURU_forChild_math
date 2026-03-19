@@ -48,13 +48,16 @@ def get_problem(request: Request):
     # retryの場合は間違えた問題を解きなおすため、出題数を切り替える
     p_num = problem_count if not retry_flag else wrong_problem_count
 
+    # ステータス
+    status = "solving"
+
     if index >= p_num:    # 全問解き終わった場合の処理
         #
         # 疑似コード↓
         if retry_flag:  # すでに解きなおししてる場合
             i = 0
             #/result へ行く処理を追加する
-            return {"status": "finished"}
+            status = "finished"
         else:  # まだ解きなおししてない場合は、全問解き終わったけど、間違えた問題があるかもしれないので、その場合は解きなおすか問う。タイムはとめる。
             start_time = request.session["start_time"]
             stop_time = time.time()
@@ -78,12 +81,12 @@ def get_problem(request: Request):
                     request.session["retry_flag"] = retry_flag
                     request.session["index"] = index
                     request.session["wrong_problem_count"] = len(wrong_problems)
-                    return {"status": "retry_prompt"}
-                return {"status": "retry_prompt"}
+                status = "retry_prompt"
             else:  # 間違えた問題がない場合は、解きなおす必要ないので、そのまま/resultへ行く
-                return {"status": "finished"}
+                status = "finished"
         
-        return {"status": "finished"}
+            status = "finished"
+
 
     # retryの場合は間違えた問題を解きなおすため、問題リストを切り替える
     p_list = problems if not retry_flag else wrong_problems
@@ -92,6 +95,9 @@ def get_problem(request: Request):
 
     return {
         "problem": problem,
+        "index": index + 1,  # ユーザに見せる用のインデックス（1始まり）
+        "max_index": p_num,  # ユーザに見せる用の最大インデックス"
+        "status": status,
     }
 
 def calculate_score(grade: int, subject: int, difficulty: int, problem_count: int, rate: int, time):

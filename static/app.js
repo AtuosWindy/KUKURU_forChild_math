@@ -45,20 +45,20 @@ function submitAnswer(){
         }
     }
 
-    count++;
+    const res = await fetch("/api/answer", {
+        method: "POST",
 
-    let isCorrect = false;
+        headers: {"Content-Type": "application/json"},
 
-    if(userAnswer == currentProblem.answer){
-        isCorrect = true;
-    }
+        body: JSON.stringify({answer: userAnswer})
+    });
 
-    if(isCorrect){
+    const data = res.json();
+
+    if(data.is_correct){
         lastResult = "せいかい！🎉";
-        correct++;
-    }else{
+    }else{ 
         lastResult = "おしい！";
-        wrongProblems.push(currentProblem);
     }
 
     loadProblem();
@@ -80,9 +80,26 @@ async function loadProblem(){
     }
 
 
+    /* APIから問題を取得 */
+    const res = await fetch("/api/problem");
+    const data = await res.json();
 
+    if(data.status == "finished"){
+        fetch("/api/result", {
+            method: "POST",
+
+            headers: {"Content-Type": "application/json"},
+
+            body: JSON.stringify({time: time, rate: rate})
+        });
+
+    /* 出題される数の最大値を保存 */
+    maxNum = data.max_index;
     /* まちがえた問題をもう一回やる場合は、出題される数の最大値をまちがえた問題数にする */
-    maxNum = (!retry_flag) ? MAX_PROBLEM : wrongCount;
+    /* ただしそれは /api/problem にて仕分け済みであるため、特に何もしなくていい */
+
+    /* 今何番目の問題か */
+    let count = data.index;
 
     /* 進捗バーを表示 */
     let percent = (count / maxNum) * 100;
@@ -127,9 +144,6 @@ async function loadProblem(){
         (count + 1) + " / " + maxNum;
 
 
-    /* APIから問題を取得 */
-    const res = await fetch("/api/problem");
-    const data = await res.json();
 
 
     /* 現在の問題を保存 */
