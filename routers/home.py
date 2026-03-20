@@ -28,6 +28,30 @@ def home(
 
     subject_names = {}
 
+    # セッションの初期化
+    request.session["grade"] = 1
+    request.session["subject_number"] = 1
+    request.session["difficulty"] = 1
+
+    request.session["subject_name"] = ""
+    request.session["problem_count"] = 0
+    request.session["wrong_problem_count"] = 0
+
+    request.session["problems"] = []  # 正解込み
+    request.session["wrong_problems"] = []  # 間違えのみ
+    request.session["index"] = 0
+    request.session["correct"] = 0
+    request.session["miss_flag"] = False
+    request.session["retry_flag"] = False
+
+    request.session["rate"] = 0.0
+    request.session["start_time"] = 0
+    request.session["end_time"] = 0
+    request.session["time"] = 0
+    request.session["score"] = 0
+    request.session["rank"] = 0
+
+
     if grade:
         subject_names = {
             k: v["name"]
@@ -85,8 +109,8 @@ def start(
     request.session["end_time"] = 0
     request.session["time"] = 0
     request.session["score"] = 0
-    request.session["rank"] = None
+    request.session["rank"] = 0
 
-    request.session["your_grade"] = None
-    request.session["nickname"] = None
+    # request.session["your_grade"] = 0
+    request.session["nickname"] = ""
 

@@ -1,11 +1,10 @@
 let lastResult = "";        /* 前問の判定結果を保存する変数 */
 let currentProblem = null;  /* 現在の問題を保存する変数 */
 let maxNum = 0;             /* 出題される数の最大値を保存する変数 */
+let userAnswer = "";
 
 
-function submitAnswer(){
-
-    let userAnswer = "";
+async function submitAnswer(){
 
     if(currentProblem.answer_type == "int" ||
         currentProblem.answer_type == "dec"){
@@ -50,10 +49,10 @@ function submitAnswer(){
 
         headers: {"Content-Type": "application/json"},
 
-        body: JSON.stringify({answer: userAnswer})
+        body: JSON.stringify({answer: userAnswer}),
     });
 
-    const data = res.json();
+    const data = await res.json();
 
     if(data.is_correct){
         lastResult = "せいかい！🎉";
@@ -62,9 +61,31 @@ function submitAnswer(){
     }
 
     loadProblem();
+    return;
 }
 
 async function loadProblem(){
+    /* APIから問題を取得 */
+    const res = await fetch("/api/problem");
+    const data = await res.json();
+    
+
+    if(data.status == "finished"){
+        /* 結果画面へ遷移 */
+        window.location.href = "/result";
+        return;
+    }
+    else if(data.status == "retry_prompt"){
+        if(confirm("まちがえた問題をもう一回やる？")){
+            await fetch("/api/retry", {method: "POST"});
+            loadProblem();
+        } else {
+            window.location.href = "/result";
+        }
+        return;
+    }
+
+
     /* 入力欄を空にする */
     document.getElementById("answer-input").value = "";
 
@@ -74,32 +95,21 @@ async function loadProblem(){
     document.getElementById("q").value = "";
     document.getElementById("r").value = "";
 
-    /* 前問の判定結果を表示 */
-    if(!(retry_flag & count == 0)){
+
+    /* 今何番目の問題か */
+    let count = data.index + 1;
+    
+    if(count - 1 > 0){
+        /* 前問の判定結果を表示 */
         document.getElementById("result").innerText = lastResult;
     }
 
 
-    /* APIから問題を取得 */
-    const res = await fetch("/api/problem");
-    const data = await res.json();
-
-    if(data.status == "finished"){
-        fetch("/api/result", {
-            method: "POST",
-
-            headers: {"Content-Type": "application/json"},
-
-            body: JSON.stringify({time: time, rate: rate})
-        });
 
     /* 出題される数の最大値を保存 */
     maxNum = data.max_index;
     /* まちがえた問題をもう一回やる場合は、出題される数の最大値をまちがえた問題数にする */
     /* ただしそれは /api/problem にて仕分け済みであるため、特に何もしなくていい */
-
-    /* 今何番目の問題か */
-    let count = data.index;
 
     /* 進捗バーを表示 */
     let percent = (count / maxNum) * 100;
@@ -107,47 +117,15 @@ async function loadProblem(){
     document.getElementById("progress-fill").style.width =
     percent + "%";
 
-
-
-    /* 最後まで問題を解き終わった場合の処理 */
-    if(count >= maxNum){
-        /* 計測時間・正答率を計算 */
-        if(!retry_flag){
-            endTime = Date.now();
-            time = (endTime - startTime) / 1000;
-            rate = correct / MAX_PROBLEM * 100;
-        }
-
-        /* まちがえた問題があればもう一回やる */        
-        if(wrongProblems.length > 0){
-
-            retry_flag = true;
-
-            count = 0;
-            wrongCount = wrongProblems.length;
-            problems = wrongProblems;
-            wrongProblems = [];
-
-            alert("まちがえた問題をもう一回やろう！");
-            loadProblem();
-            return;
-        }
-
-        /* 結果画面へ遷移 */
-        window.location.href = 
-            "/result?time=" + time + "&rate=" + rate;
-
-        return;
-    }
-
+    /* 今何問目かを表示 */
     document.getElementById("progress").innerText =
-        (count + 1) + " / " + maxNum;
+        (count) + " / " + maxNum;
 
 
 
 
     /* 現在の問題を保存 */
-    const problem = (!retry_flag) ? data.problem : problems[count];
+    const problem = data.problem;
 
     currentProblem = problem;
 
@@ -178,14 +156,10 @@ async function loadProblem(){
             document.getElementById("input-remain").style.display="block";
         }
     }
-
     /* 難易度が1の場合のみ選択肢のボタンを表示 */
-    if(data.difficulty == 1){
+    else if(data.difficulty == 1){
         document.getElementById("choices-area").style.display="block";
         document.getElementById("input-area").style.display="none";
-    }else{
-        document.getElementById("choices-area").style.display="none";
-        document.getElementById("input-area").style.display="block";
     }
 
     /* 難易度が1の場合のみ４択のボタン押す */
@@ -195,25 +169,26 @@ async function loadProblem(){
 
         btn.innerText = problem.choices[i];
 
-        btn.onclick = () => {
+        btn.onclick = async () => {
 
-            count++;
+            userAnswer = problem.choices[i];
+            /* console.log("送る値:", userAnswer); */
 
-            let isCorrect = false;
+            const res = await fetch("/api/answer", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({answer: String(userAnswer)}),
+            });
+            const data = await res.json();
 
-            if(problem.choices[i] == problem.answer){
-                isCorrect = true;
-            }
-
-            if(isCorrect){
+            if(data.is_correct){
                 lastResult = "せいかい！🎉";
-                correct += (!retry_flag) ? 1 : 0;
-            }else{
+            }else{ 
                 lastResult = "おしい！";
-                wrongProblems.push(currentProblem);
             }
 
             loadProblem();
+            return;
         }
     });
 
@@ -230,24 +205,3 @@ document.addEventListener("keydown", function(e){
     }
 });
 
-const res = await fetch("/api/answer", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({answer: userAnswer})
-});
-
-/*
-const res = await fetch("/api/answer", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({answer: userAnswer})
-})
-*/
-
-const data = await res.json();
-
-if(data.is_correct){
-    lastResult = "せいかい！🎉";
-}else{
-    lastResult = "おしい！";
-}

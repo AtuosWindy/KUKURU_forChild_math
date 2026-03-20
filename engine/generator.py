@@ -64,7 +64,7 @@ def generate_problem(grade: int, subject: int, difficulty: int):
     return {
         "question": question,
         "choices": choices,
-        "answer": answer,
+        "answer": str(answer),
         "answer_type": answer_type,
         "difficulty": difficulty
     }

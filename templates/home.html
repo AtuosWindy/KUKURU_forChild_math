@@ -98,11 +98,7 @@
         await fetch("/api/start",{
 
         method: "POST",
-
-        headers: {
-        "Content-Type": "application/json"
-        },
-
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
         grade: selectedGrade,
         subject: selectedSubject,
@@ -112,6 +108,7 @@
         });
 
         location.href="/problem";
+        return;
 
         }
 
@@ -129,7 +126,7 @@
         });
 
         showSelectSubject();
-
+        return;
         }
 
         function showSelectSubject(){
@@ -141,6 +138,7 @@
         function selectsubject(subject){
         selectedSubject = subject;
         showSelectDifficulty();
+        return;
         }
 
         function showBacktoSelectGrade(){

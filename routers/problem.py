@@ -1,11 +1,12 @@
 from re import S
 from tokenize import Double
 from fastapi import APIRouter, Request
+from fastapi.background import P
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from engine.generator import generate_problem
+import time
 
 router = APIRouter()
 
@@ -45,6 +46,12 @@ def get_problem(request: Request):
     miss_flag = request.session.get("miss_flag", False)
     retry_flag = request.session.get("retry_flag", False)
 
+    # 時間計測開始(スタートする場合)
+    start_time = request.session.get("start_time", 0)
+    if index == 0 and not retry_flag:  # 最初の問題で、かつ解きなおしじゃない場合は、時間計測スタート
+        start_time = time.time()
+        request.session["start_time"] = start_time
+
     # retryの場合は間違えた問題を解きなおすため、出題数を切り替える
     p_num = problem_count if not retry_flag else wrong_problem_count
 
@@ -52,52 +59,51 @@ def get_problem(request: Request):
     status = "solving"
 
     if index >= p_num:    # 全問解き終わった場合の処理
-        #
-        # 疑似コード↓
+        # status が "finished" または "retry_prompt" になる場合に備え 問題の配列番号を 0 にリセットしておく
+        # index = 0
+        # request.session["index"] = index
         if retry_flag:  # すでに解きなおししてる場合
-            i = 0
             #/result へ行く処理を追加する
-            status = "finished"
+            return { status: "finished" }
         else:  # まだ解きなおししてない場合は、全問解き終わったけど、間違えた問題があるかもしれないので、その場合は解きなおすか問う。タイムはとめる。
-            start_time = request.session["start_time"]
             stop_time = time.time()
-            time = stop_time - start_time
+            watch_time = stop_time - start_time
             request.session["stop_time"] = stop_time    #機能的に意味はそこまでないが、コードの構造上あったほうが分かりやすく、さらに将来的に不正操作があった場合のデバッグ材料になるため記録する。
-            rate = int(correct / problem_count * 100)
+
+            rate = int(correct / problem_count * 100) if problem_count > 0 else 0
             grade = request.session["grade"]
             subject = request.session["subject_number"]
             # problem_count は冒頭でセッションから取得しているからOK！
-            score = calculate_score(grade, subject, difficulty, problem_count, rate, time) # スコアの計算式は要検討。とりあえず、正答率と時間をもとに、スコアを計算する感じでいいと思う。良い値ほど高くする。ランキングの順位は最終的にコレ１つで決める。超重要。
-            request.session["time"] = time
+
+            score = calculate_score(grade, subject, difficulty, problem_count, rate, watch_time) # スコアの計算式は要検討。とりあえず、正答率と時間をもとに、スコアを計算する感じでいいと思う。良い値ほど高くする。ランキングの順位は最終的にコレ１つで決める。超重要。
+
+            request.session["time"] = watch_time
             request.session["rate"] = rate
             request.session["score"] = score
             if miss_flag:  # 間違えた問題がある場合
 
-                #ユーザに「問題を解きなおすかどうか尋ねる」
-                
-                if 0:   #if 「問題を解きなおすかどうか尋ねた結果、ユーザが「解きなおす」と答えた場合」:
-                    retry_flag = True
-                    index = 0   # 間違えた問題を解きなおす場合に備え、indexをリセット
-                    request.session["retry_flag"] = retry_flag
-                    request.session["index"] = index
-                    request.session["wrong_problem_count"] = len(wrong_problems)
-                status = "retry_prompt"
+                if not retry_flag:
+                    return { status: "retry_prompt" }
+                else:
+                    return { status: "finished" }
             else:  # 間違えた問題がない場合は、解きなおす必要ないので、そのまま/resultへ行く
-                status = "finished"
+                return { status: "finished" }
         
-            status = "finished"
-
 
     # retryの場合は間違えた問題を解きなおすため、問題リストを切り替える
+    if status == "finished":
+        return {"status": status}
     p_list = problems if not retry_flag else wrong_problems
+    p_num = len(p_list)
 
     problem = p_list[index]
 
     return {
         "problem": problem,
-        "index": index + 1,  # ユーザに見せる用のインデックス（1始まり）
+        "index": index,  # ユーザに見せる用のインデックス
         "max_index": p_num,  # ユーザに見せる用の最大インデックス"
         "status": status,
+        "difficulty": difficulty,
     }
 
 def calculate_score(grade: int, subject: int, difficulty: int, problem_count: int, rate: int, time):
@@ -240,7 +246,7 @@ def calculate_score(grade: int, subject: int, difficulty: int, problem_count: in
 
 @router.post("/api/answer")
 def answer(request: Request, body: AnswerRequest):
-    user_answer = body.answer
+    user_answer = str(body.answer)
 
     index = request.session["index"]
     problems = request.session["problems"]
@@ -248,7 +254,7 @@ def answer(request: Request, body: AnswerRequest):
     retry_flag = request.session["retry_flag"]
 
     p_list = problems if not retry_flag else wrong_problems
-    correct_answer = p_list[index]["answer"]
+    correct_answer = str(p_list[index]["answer"])
 
     miss_flag = request.session["miss_flag"]
     retry_flag = request.session["retry_flag"]
@@ -277,8 +283,12 @@ def retry(request: Request):
 
 
 @router.get("/result")
-def result(request: Request, time: float, rate: float):
+def result(request: Request):
     return templates.TemplateResponse(
         "result.html",
-        {"request": request, "time": time, "rate": rate}
+        {
+            "request": request,
+            "time": request.session.get("time", 0),
+            "rate": request.session.get("rate", 0),
+        }
     )
