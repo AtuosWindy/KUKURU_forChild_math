@@ -61,6 +61,8 @@ def generate_problem(grade: int, subject: int, difficulty: int):
 
     random.shuffle(choices)
 
+    print("⇒  ", question, ", ", answer)
+
     return {
         "question": question,
         "choices": choices,

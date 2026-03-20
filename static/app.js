@@ -155,6 +155,15 @@ async function loadProblem(){
             document.getElementById("input-fraction").style.display="none";
             document.getElementById("input-remain").style.display="block";
         }
+
+        /* エンターキーで回答を提出できるようにする */
+        document.addEventListener("keydown", function(e){
+            if(e.key === "Enter"){
+                submitAnswer();
+                return;
+            }
+        });
+
     }
     /* 難易度が1の場合のみ選択肢のボタンを表示 */
     else if(data.difficulty == 1){
@@ -193,15 +202,3 @@ async function loadProblem(){
     });
 
 }
-
-if (document.getElementById("question")) {
-    loadProblem();
-}
-
-/* エンターキーで回答を提出できるようにする */
-document.addEventListener("keydown", function(e){
-    if(e.key === "Enter"){
-        submitAnswer();
-    }
-});
-
