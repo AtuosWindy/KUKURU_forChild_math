@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -12,6 +12,7 @@ import time
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
+
 
 class StartRequest(BaseModel):
     grade: int
@@ -29,27 +30,30 @@ def home(
     subject_names = {}
 
     # セッションの初期化
-    request.session["grade"] = 1
-    request.session["subject_number"] = 1
-    request.session["difficulty"] = 1
+    if "initialized" not in request.session:
+        request.session["grade"] = 1
+        request.session["subject_number"] = 1
+        request.session["difficulty"] = 1
 
-    request.session["subject_name"] = ""
-    request.session["problem_count"] = 0
-    request.session["wrong_problem_count"] = 0
+        request.session["subject_name"] = ""
+        request.session["problem_count"] = 0
+        request.session["wrong_problem_count"] = 0
 
-    request.session["problems"] = []  # 正解込み
-    request.session["wrong_problems"] = []  # 間違えのみ
-    request.session["index"] = 0
-    request.session["correct"] = 0
-    request.session["miss_flag"] = False
-    request.session["retry_flag"] = False
+        request.session["problems"] = []  # 正解込み
+        request.session["wrong_problems"] = []  # 間違えのみ
+        request.session["index"] = 0
+        request.session["correct"] = 0
+        request.session["miss_flag"] = False
+        request.session["retry_flag"] = False
 
-    request.session["rate"] = 0.0
-    request.session["start_time"] = 0
-    request.session["end_time"] = 0
-    request.session["time"] = 0
-    request.session["score"] = 0
-    request.session["rank"] = 0
+        request.session["rate"] = 0.0
+        request.session["start_time"] = 0
+        request.session["end_time"] = 0
+        request.session["time"] = 0
+        request.session["score"] = 0
+        request.session["rank"] = 0
+
+        request.session["initialized"] = True
 
 
     if grade:
@@ -94,7 +98,8 @@ def start(
     request.session["difficulty"] = difficulty
 
     request.session["subject_name"] = data_map["name"]
-    request.session["problem_count"] = count
+    request.session["problem_count"] = int(count)
+    print("home.pyの/api/startにて, ", count, " がproblem_countに保存されました。")
     request.session["wrong_problem_count"] = 0
 
     request.session["problems"] = problems  # 正解込み

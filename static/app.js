@@ -46,10 +46,10 @@ async function submitAnswer(){
 
     const res = await fetch("/api/answer", {
         method: "POST",
-
+        credentials: "include",
         headers: {"Content-Type": "application/json"},
 
-        body: JSON.stringify({answer: userAnswer}),
+        body: JSON.stringify({answer: String(userAnswer)}),
     });
 
     const data = await res.json();
@@ -66,7 +66,10 @@ async function submitAnswer(){
 
 async function loadProblem(){
     /* APIから問題を取得 */
-    const res = await fetch("/api/problem");
+    const res = await fetch("/api/problem", {
+        method: "GET",
+        credentials: "include",
+    });
     const data = await res.json();
     
 
@@ -77,7 +80,10 @@ async function loadProblem(){
     }
     else if(data.status == "retry_prompt"){
         if(confirm("まちがえた問題をもう一回やる？")){
-            await fetch("/api/retry", {method: "POST"});
+            await fetch("/api/retry", {
+                method: "POST",
+                credentials: "include",
+            });
             loadProblem();
         } else {
             window.location.href = "/result";
@@ -87,14 +93,20 @@ async function loadProblem(){
 
 
     /* 入力欄を空にする */
-    document.getElementById("answer-input").value = "";
+    const answerInput = document.getElementById("answer-input");
+    if (answerInput) answerInput.value = "";
 
-    document.getElementById("num").value = "";
-    document.getElementById("den").value = "";
+    const num = document.getElementById("num");
+    if (num) num.value = "";
 
-    document.getElementById("q").value = "";
-    document.getElementById("r").value = "";
+    const den = document.getElementById("den");
+    if (den) den.value = "";
 
+    const qInput = document.getElementById("q");
+    if (qInput) qInput.value = "";
+
+    const rInput = document.getElementById("r");
+    if (rInput) rInput.value = "";
 
     /* 今何番目の問題か */
     let count = data.index + 1;
@@ -112,7 +124,7 @@ async function loadProblem(){
     /* ただしそれは /api/problem にて仕分け済みであるため、特に何もしなくていい */
 
     /* 進捗バーを表示 */
-    let percent = (count / maxNum) * 100;
+    let percent = maxNum > 0 ? (count / maxNum) * 100 : 0;
 
     document.getElementById("progress-fill").style.width =
     percent + "%";
@@ -154,16 +166,15 @@ async function loadProblem(){
             document.getElementById("input-int-dec").style.display="none";
             document.getElementById("input-fraction").style.display="none";
             document.getElementById("input-remain").style.display="block";
+
         }
 
         /* エンターキーで回答を提出できるようにする */
-        document.addEventListener("keydown", function(e){
+        document.onkeydown = function(e){
             if(e.key === "Enter"){
                 submitAnswer();
-                return;
             }
-        });
-
+        };
     }
     /* 難易度が1の場合のみ選択肢のボタンを表示 */
     else if(data.difficulty == 1){
@@ -185,6 +196,7 @@ async function loadProblem(){
 
             const res = await fetch("/api/answer", {
                 method: "POST",
+                credentials: "include",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({answer: String(userAnswer)}),
             });
@@ -201,4 +213,8 @@ async function loadProblem(){
         }
     });
 
+}
+
+if (document.getElementById("question")) {
+    loadProblem();
 }

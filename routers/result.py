@@ -1,11 +1,20 @@
-from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, FastAPI, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
 
+
 @router.get("/result", response_class=HTMLResponse)
 def result(request: Request):
-    return templates.TemplateResponse()
+    request.session["initialized"] = False
+    return templates.TemplateResponse(
+        "result.html",
+        {
+            "request": request,
+            "time": request.session.get("time", 0),
+            "rate": request.session.get("rate", 0),
+        }
+    )

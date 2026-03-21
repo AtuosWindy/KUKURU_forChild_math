@@ -1,6 +1,6 @@
 from re import S
 from tokenize import Double
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, FastAPI, Request
 from fastapi.background import P
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -31,10 +31,11 @@ def problem_page(request: Request):
 
 @router.get("/api/problem")
 def get_problem(request: Request):
-
     difficulty = request.session.get("difficulty", 1)
 
     problem_count = request.session.get("problem_count", 0)
+    print("problem_count: ", problem_count)
+
     wrong_problem_count = request.session.get("wrong_problem_count", 0)
 
     problems = request.session.get("problems", [])
@@ -64,7 +65,7 @@ def get_problem(request: Request):
         # request.session["index"] = index
         if retry_flag:  # すでに解きなおししてる場合
             #/result へ行く処理を追加する
-            return { status: "finished" }
+            status = "finished"
         else:  # まだ解きなおししてない場合は、全問解き終わったけど、間違えた問題があるかもしれないので、その場合は解きなおすか問う。タイムはとめる。
             stop_time = time.time()
             watch_time = stop_time - start_time
@@ -83,16 +84,18 @@ def get_problem(request: Request):
             if miss_flag:  # 間違えた問題がある場合
 
                 if not retry_flag:
-                    return { status: "retry_prompt" }
+                    status = "retry_prompt"
                 else:
-                    return { status: "finished" }
+                    status = "finished"
             else:  # 間違えた問題がない場合は、解きなおす必要ないので、そのまま/resultへ行く
-                return { status: "finished" }
+                status = "finished"
         
 
     # retryの場合は間違えた問題を解きなおすため、問題リストを切り替える
     if status == "finished":
-        return {"status": status}
+        return {
+            "status": status,
+        }
     p_list = problems if not retry_flag else wrong_problems
     p_num = len(p_list)
 
@@ -290,5 +293,6 @@ def result(request: Request):
             "request": request,
             "time": request.session.get("time", 0),
             "rate": request.session.get("rate", 0),
+            "score": request.session.get("score", 0),
         }
     )
