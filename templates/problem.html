@@ -1,36 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
+{% extends "base.html" %}
 
-        #progress-bar {
-            width: 300px;
-            height: 20px;
-            background: #ddd;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-
-        #progress-fill {
-            height: 100%;
-            width: 0%;
-            background: #4CAF50;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .fraction {
-            display: inline-block;
-            text-align: center;
-        }
-
-        .fraction span:first-child {
-            border-bottom: 1px solid black;
-            display: block;
-        }
-    </style>
-
-</head>
+{% block content %}
 <body>
     <div id="progress-bar">
         <div id="progress-fill"></div>
@@ -75,4 +45,4 @@
     <script src="/static/app.js"></script>
 
 </body>
-</html>
+{% endblock %}
