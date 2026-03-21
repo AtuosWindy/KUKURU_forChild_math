@@ -4,7 +4,6 @@
 Study_Child_001_KUKURU
 │
 ├ main.py                ← FastAPI入口
-├ index.html            ←「/」のルートにしようかなって検討中
 │
 ├ routers                ← APIルーティング
 │   ├ home.py
@@ -37,6 +36,7 @@ Study_Child_001_KUKURU
 │   └ app.js
 │
 └ templates              ← HTML
+    ├ index.html            ←「/」のルートにしようかなって検討中
     ├ home.html
     ├ problem.html
     ├ result.html
