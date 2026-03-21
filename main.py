@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.templating import Jinja2Templates
@@ -20,3 +20,7 @@ app.include_router(result.router)
 app.include_router(ranking.router)
 
 templates = Jinja2Templates(directory="templates")
+
+@app.get("/")
+def root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
