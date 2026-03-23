@@ -56,6 +56,32 @@ button {
     transition: 0.3s;
 }
 
+#answer-input{
+    height: 100%;
+    width: 50%;
+}
+
+#num{
+    height: 100%;
+    width: 50%;
+}
+
+#den{
+    height: 100%;
+    width: 50%;
+}
+
+#q{
+    height: 100%;
+    width: 50%;
+}
+
+#r{
+    height: 100%;
+    width: 50%;
+}
+
+
 #result {
     height: 100px;
 }
