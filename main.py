@@ -29,6 +29,7 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/")
 def root(request: Request):
     return templates.TemplateResponse(
+        request,
         name = "index.html", 
         context = {"request": request},
     )

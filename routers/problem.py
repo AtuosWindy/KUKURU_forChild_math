@@ -21,8 +21,9 @@ class AnswerRequest(BaseModel):
 def problem_page(request: Request):
 
     return templates.TemplateResponse(
-        "problem.html",
-        {
+        request,
+        name = "problem.html",
+        context = {
             "request": request,
             "protlem_count": request.session["problem_count"]
         }
@@ -288,8 +289,9 @@ def retry(request: Request):
 @router.get("/result")
 def result(request: Request):
     return templates.TemplateResponse(
-        "result.html",
-        {
+        request,
+        name = "result.html",
+        context = {
             "request": request,
             "time": request.session.get("time", 0),
             "rate": request.session.get("rate", 0),

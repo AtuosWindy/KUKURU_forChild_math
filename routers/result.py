@@ -11,8 +11,9 @@ templates = Jinja2Templates(directory="templates")
 def result(request: Request):
     request.session["initialized"] = False
     return templates.TemplateResponse(
-        "result.html",
-        {
+        request,
+        name = "result.html",
+        context = {
             "request": request,
             "time": request.session.get("time", 0),
             "rate": request.session.get("rate", 0),

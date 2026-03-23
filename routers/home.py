@@ -64,6 +64,7 @@ def home(
         }
 
     return templates.TemplateResponse(
+        request,
         name = "home.html",
         context = {
             "request": request,
