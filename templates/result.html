@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<body>
-    <h1>けっか！</h1>
 
-    <p>タイム：{{ time }} 秒</p>
-    <p>正答率：{{ rate }} %</p>
+<h1>けっか！</h1>
 
-    <button onclick="location.href=`/home`">もういちど</button>
+<p>タイム：{{ time }} 秒</p>
+<p>正答率：{{ rate }} %</p>
 
-</body>
+<button onclick="location.href=`/home`">もういちど</button>
+
 {% endblock %}

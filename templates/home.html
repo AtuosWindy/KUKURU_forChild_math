@@ -1,138 +1,135 @@
 {% extends "base.html" %}
 
 {% block content %}
-<body>
+<h1>KUKURU</h1>
 
-    <h1>KUKURU</h1>
+<!--<button onclick="startGame()">はじめる</button>-->
 
-    <!--<button onclick="startGame()">はじめる</button>-->
+<div id="select-grade">
+    <h2>学年を選んでね</h2>
+    <button onclick="location.href=`/`">はじめにもどる</button>
+    <br>
+    <button onclick="selectGrade(1)">1年生</button>
+    <button onclick="selectGrade(2)">2年生</button>
+    <button onclick="selectGrade(3)">3年生</button>
+    <button onclick="selectGrade(4)">4年生</button>
+    <button onclick="selectGrade(5)">5年生</button>
+    <button onclick="selectGrade(6)">6年生</button>
 
-    <div id="select-grade">
-        <h2>学年を選んでね</h2>
-        <button onclick="location.href=`/`">はじめにもどる</button>
-        <br>
-        <button onclick="selectGrade(1)">1年生</button>
-        <button onclick="selectGrade(2)">2年生</button>
-        <button onclick="selectGrade(3)">3年生</button>
-        <button onclick="selectGrade(4)">4年生</button>
-        <button onclick="selectGrade(5)">5年生</button>
-        <button onclick="selectGrade(6)">6年生</button>
+</div>
 
-    </div>
+<div id="select-subject" style="display: none;">
+    <h2>単元を選んでね</h2>
+    <button onclick="showBacktoSelectGrade()">もどる</button>
+    <br>
 
-    <div id="select-subject" style="display: none;">
-        <h2>単元を選んでね</h2>
-        <button onclick="showBacktoSelectGrade()">もどる</button>
-        <br>
+    {% for id, data in subject_map.items() %}
+    {% if grade == selectedGrade %}
+    <button class="subject grade{{ ( id//1000 ) }}" onclick="selectsubject({{ ( id%1000 ) }})">
+        {{data.name}}
+    </button>
+    {% endif %}
+    {% endfor %}
+</div>
 
-        {% for id, data in subject_map.items() %}
-        {% if grade == selectedGrade %}
-        <button class="subject grade{{ ( id//1000 ) }}" onclick="selectsubject({{ ( id%1000 ) }})">
-            {{data.name}}
-        </button>
-        {% endif %}
-        {% endfor %}
-    </div>
+<div id="select-difficulty" style="display: none;">
+    <h2>難易度</h2>
+    <button onclick="showBacktoSelectSubject()">もどる</button>
+    <br>
 
-    <div id="select-difficulty" style="display: none;">
-        <h2>難易度</h2>
-        <button onclick="showBacktoSelectSubject()">もどる</button>
-        <br>
+    {% if grade == 6 and subject == 4 %}
+    <!-- Do Noting -->
+    {% else %}
 
-        {% if grade == 6 and subject == 4 %}
-        <!-- Do Noting -->
-        {% else %}
+    <button onclick="start(1)">
+        かんたん
+    </button>
 
-        <button onclick="start(1)">
-            かんたん
-        </button>
+    <button onclick="start(2)">
+        ふつう
+    </button>
 
-        <button onclick="start(2)">
-            ふつう
-        </button>
+    {% endif %}
 
-        {% endif %}
-
-        <button onclick="start(3)">
-            むずかしい
-        </button>
-    </div>
+    <button onclick="start(3)">
+        むずかしい
+    </button>
+</div>
 
 
-    <script src="/static/app.js"></script>
+<script src="/static/app.js"></script>
 
-    <script>
-        let selectedGrade = null;
-        let selectedSubject = null;
+<script>
+    let selectedGrade = null;
+    let selectedSubject = null;
 
-        async function start(difficulty){
+    async function start(difficulty){
 
-        await fetch("/api/start",{
+    await fetch("/api/start",{
 
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-        grade: selectedGrade,
-        subject: selectedSubject,
-        difficulty: difficulty
-        }),
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+    grade: selectedGrade,
+    subject: selectedSubject,
+    difficulty: difficulty
+    }),
 
-        });
+    });
 
-        location.href="/problem";
-        return;
+    location.href="/problem";
+    return;
 
-        }
+    }
 
 
-        function selectGrade(grade){
+    function selectGrade(grade){
 
-        selectedGrade = grade;
+    selectedGrade = grade;
 
-        document.querySelectorAll(".subject").forEach(btn=>{
-        btn.style.display="none";
-        });
+    document.querySelectorAll(".subject").forEach(btn=>{
+    btn.style.display="none";
+    });
 
-        document.querySelectorAll(".grade"+grade).forEach(btn=>{
-        btn.style.display="inline-block"
-        });
+    document.querySelectorAll(".grade"+grade).forEach(btn=>{
+    btn.style.display="inline-block"
+    });
 
-        showSelectSubject();
-        return;
-        }
+    showSelectSubject();
+    return;
+    }
 
-        function showSelectSubject(){
-        document.getElementById("select-grade").style.display = "none";
-        document.getElementById("select-subject").style.display = "block";
-        document.getElementById("select-difficulty").style.display = "none";
-        }
+    function showSelectSubject(){
+    document.getElementById("select-grade").style.display = "none";
+    document.getElementById("select-subject").style.display = "block";
+    document.getElementById("select-difficulty").style.display = "none";
+    }
 
-        function selectsubject(subject){
-        selectedSubject = subject;
-        showSelectDifficulty();
-        return;
-        }
+    function selectsubject(subject){
+    selectedSubject = subject;
+    showSelectDifficulty();
+    return;
+    }
 
-        function showBacktoSelectGrade(){
-        document.getElementById("select-grade").style.display = "block";
-        document.getElementById("select-subject").style.display = "none";
-        document.getElementById("select-difficulty").style.display = "none";
-        }
+    function showBacktoSelectGrade(){
+    document.getElementById("select-grade").style.display = "block";
+    document.getElementById("select-subject").style.display = "none";
+    document.getElementById("select-difficulty").style.display = "none";
+    }
 
-        function showSelectDifficulty(){
-        document.getElementById("select-grade").style.display = "none";
-        document.getElementById("select-subject").style.display = "none";
-        document.getElementById("select-difficulty").style.display = "block";
-        }
+    function showSelectDifficulty(){
+    document.getElementById("select-grade").style.display = "none";
+    document.getElementById("select-subject").style.display = "none";
+    document.getElementById("select-difficulty").style.display = "block";
+    }
 
-        function showBacktoSelectSubject(){
-        document.getElementById("select-grade").style.display = "none";
-        document.getElementById("select-subject").style.display = "block";
-        document.getElementById("select-difficulty").style.display = "none";
-        }
+    function showBacktoSelectSubject(){
+    document.getElementById("select-grade").style.display = "none";
+    document.getElementById("select-subject").style.display = "block";
+    document.getElementById("select-difficulty").style.display = "none";
+    }
 
-    </script>
+</script>
 
-</body>
 {% endblock %}

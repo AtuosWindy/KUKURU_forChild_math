@@ -1,15 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<body>
-	<h1>✨ ようこそ ✨</h1>
-	<p>計算トレーニングアプリ</p>
-	<button onclick="start()">はじめる</button>
-	<script>
-		function start(){
-		location.href = "/home";
-		return;
-		}
-	</script>
-</body>
+<h1>✨ ようこそ ✨</h1>
+<p>計算トレーニングアプリ</p>
+<button onclick="start()">はじめる</button>
+<script>
+	function start(){
+	location.href = "/home";
+	return;
+	}
+</script>
 {% endblock %}

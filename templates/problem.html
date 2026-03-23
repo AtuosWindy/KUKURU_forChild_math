@@ -1,48 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<body>
-    <div id="progress-bar">
-        <div id="progress-fill"></div>
-    </div>
-    <div id="progress"></div>
+<div id="progress-bar">
+    <div id="progress-fill"></div>
+</div>
+<div id="progress"></div>
 
-    <h1 id="question"></h1>
+<h1 id="question"></h1>
 
-    <div id="result"></div>
+<div id="result"></div>
 
-    <!-- 難易度が "かんたん" の場合 -->
-    <div id="choices-area">
-        <button class="choice"></button>
-        <button class="choice"></button>
-        <button class="choice"></button>
-        <button class="choice"></button>
-    </div>
+<!-- 難易度が "かんたん" の場合 -->
+<div id="choices-area">
+    <button class="choice"></button>
+    <button class="choice"></button>
+    <button class="choice"></button>
+    <button class="choice"></button>
+</div>
 
 
-    <!-- 難易度が "ふつう" or "むずかしい" の場合 -->
-    <div id="input-area" style="display:none;">
+<!-- 難易度が "ふつう" or "むずかしい" の場合 -->
+<div id="input-area" style="display:none;">
 
-        <div id="input-int-dec">
-            <input id="answer-input">
-        </div>
-
-        <div id="input-fraction" style="display:none;">
-            <span class="fraction">
-                <span><input id="num"></span>
-                <span><input id="den"></span>
-            </span>
-        </div>
-
-        <div id="input-remain" style="display:none;">
-            <input id="q"> あまり <input id="r">
-        </div>
-
-        <button onclick="submitAnswer()">こたえ</button>
-
+    <div id="input-int-dec">
+        <input id="answer-input">
     </div>
 
-    <script src="/static/app.js"></script>
+    <div id="input-fraction" style="display:none;">
+        <span class="fraction">
+            <span><input id="num"></span>
+            <span><input id="den"></span>
+        </span>
+    </div>
 
-</body>
+    <div id="input-remain" style="display:none;">
+        <input id="q"> あまり <input id="r">
+    </div>
+
+    <button onclick="submitAnswer()">こたえ</button>
+
+</div>
+
+<script src="/static/app.js"></script>
+
 {% endblock %}
