@@ -18,7 +18,7 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f5f7fb;
-    font-size: 40px;
+    font-size: 20px;
 }
 
 header {
@@ -54,6 +54,10 @@ button {
     background: #4CAF50;
     border-radius: 10px;
     transition: 0.3s;
+}
+
+#result {
+    height: 100px;
 }
 
 .fraction {

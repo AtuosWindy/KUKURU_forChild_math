@@ -61,8 +61,8 @@ def get_problem(request: Request):
 
     if index >= p_num:    # 全問解き終わった場合の処理
         # status が "finished" または "retry_prompt" になる場合に備え 問題の配列番号を 0 にリセットしておく
-        # index = 0
-        # request.session["index"] = index
+        index = 0
+        request.session["index"] = index
         if retry_flag:  # すでに解きなおししてる場合
             #/result へ行く処理を追加する
             status = "finished"
