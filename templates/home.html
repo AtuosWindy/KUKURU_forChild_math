@@ -33,29 +33,14 @@
 </div>
 
 <div id="select-difficulty" style="display: none;">
-    <h2>難易度</h2>
+    <h2 id="difficulty-title"></h2>
+    <h4>そのままスタートするよ！</h4>
+
     <button onclick="showBacktoSelectSubject()">もどる</button>
     <br>
 
-    {% if grade == 6 and subject == 4 %}
-    <!-- Do Noting -->
-    {% else %}
-
-    <button onclick="start(1)">
-        かんたん
-    </button>
-
-    <button onclick="start(2)">
-        ふつう
-    </button>
-
-    {% endif %}
-
-    <button onclick="start(3)">
-        むずかしい
-    </button>
+    <div id="difficulty-buttons"></div>
 </div>
-
 
 <script src="/static/app.js"></script>
 
@@ -130,6 +115,46 @@
     document.getElementById("select-difficulty").style.display = "none";
     }
 
+    function showSelectDifficulty(){
+    document.getElementById("select-grade").style.display = "none";
+    document.getElementById("select-subject").style.display = "none";
+    document.getElementById("select-difficulty").style.display = "block";
+
+    const title = document.getElementById("difficulty-title");
+    const container = document.getElementById("difficulty-buttons");
+
+    container.innerHTML = ""; // 初期化
+
+    // ① タイトル
+    if (selectedGrade <= 4){
+        title.innerText = "むずかしさをえらんでね";
+    } else {
+        title.innerText = "難易度を選んでね";
+    }
+
+    // ② 特殊条件（6年生 × 単元4）
+    if (selectedGrade === 6 && selectedSubject === 4){
+        container.innerHTML += `<button onclick="start(3)">ハード</button>`;
+        return;
+    }
+
+    // ③ 1〜2年
+    if (selectedGrade <= 2){
+        container.innerHTML += `
+            <button onclick="start(1)">かんたん</button>
+            <button onclick="start(2)">ふつう</button>
+            <button onclick="start(3)">むずかしい</button>
+        `;
+        return;
+    }
+
+    // ④ それ以外
+    container.innerHTML += `
+        <button onclick="start(1)">イージー</button>
+        <button onclick="start(2)">ノーマル</button>
+        <button onclick="start(3)">ハード</button>
+    `;
+    }
 </script>
 
 {% endblock %}
