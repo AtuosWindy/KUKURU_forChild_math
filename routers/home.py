@@ -64,8 +64,8 @@ def home(
         }
 
     return templates.TemplateResponse(
-        "home.html",
-        {
+        name = "home.html",
+        context = {
             "request": request,
             "subject_map": SUBJECT_MAP,
         }
