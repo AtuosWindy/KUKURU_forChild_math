@@ -27,7 +27,7 @@
 
         {% for id, data in subject_map.items() %}
         {% if grade == selectedGrade %}
-        <button class="subject grade{{id//1000}}" onclick="selectsubject({{id%1000}})">
+        <button class="subject grade{{ ( id//1000 ) }}" onclick="selectsubject({{ ( id%1000 ) }})">
             {{data.name}}
         </button>
         {% endif %}
