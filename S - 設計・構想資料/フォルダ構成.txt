@@ -1,7 +1,7 @@
 ※各単元ごとの「tutorial」ページ(tutorial_1001.html...とか)をどう作ろうか、、、検討中。
 　(ここまで作ってたら設定期限に間に合わんかもなぁ。。)
 
-Study_Child_001_KUKURU
+C:\APP\Study_Child_001_KUKURU(ローカルフォルダ)
 │
 ├ main.py                ← FastAPI入口
 │
@@ -24,21 +24,23 @@ Study_Child_001_KUKURU
 │   │   └ grade6.py		←6年生
 │   │
 │   └ choices		←本当はこの中から、答えが「整数」「少数」「商・あまり」「分数」に合わせてそれぞれ4択生成するアルゴリズム呼ぶ予定だった
-│       ├ integer.py		←整数
+│       ├ integer.py	←整数
 │       ├ decimal.py	←少数
-│       ├ remain.py		←商・あまり
+│       ├ remain.py	←商・あまり
 │       └ fraction.py	←分数
 │
 ├ models                 ← データ構造
 │   └ problem.py
 │
 ├ static                 ← JS / CSS
+│   ├ style.css
 │   └ app.js
 │
 └ templates              ← HTML
-    ├ index.html            ←「/」のルートにしようかなって検討中
-    ├ home.html
-    ├ problem.html
-    ├ result.html
-    ├ ranking.html
-    └ tutorial.html
+    ├ base.html
+    ├ index.html            ←「/」
+    ├ home.html             ←「/home」
+    ├ problem.html          ←「/problem」
+    ├ result.html           ←「/result」
+    ├ ranking.html          ←今は未実装
+    └ tutorial.html         ←こちらも今は未実装
