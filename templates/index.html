@@ -3,11 +3,5 @@
 {% block content %}
 <h1>✨ ようこそ ✨</h1>
 <p>計算トレーニングアプリ</p>
-<button onclick="start()">はじめる</button>
-<script>
-	function start(){
-	location.href = "/home";
-	return;
-	}
-</script>
+<button onclick="location.href=`/home`">はじめる</button>
 {% endblock %}
