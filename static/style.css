@@ -178,6 +178,8 @@ button {
 
 .clear-animation {
     animation: clearPop 0.8s ease;
+    color: #4CAF50;
+    font-weight: bold;
 }
 
 @keyframes clearPop {
@@ -196,6 +198,21 @@ button {
         transform: scale(1);
     }
 }
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 @keyframes shake {
     0% {
         transform: translateX(0);

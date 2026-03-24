@@ -4,22 +4,18 @@
 
 <h1>けっか！</h1>
 
-<!--timeを小数点以下2桁にしたい！！-->
+<div id="result-flag" data-perfect="{{ 'true' if rate == 100 else 'false' }}"></div>
+
 <p>タイム：{{ "%.2f"|format(time) }} 秒</p>
 <p>正答率：{{ rate }} %</p>
 <p id="final-score">スコア：{{ score }} 点</p>
 
-<button onclick="location.href=`/home`">もういちど</button>
+<button onclick="location.href='/home'">もういちど</button>
 
 <script>
-    const isPerfect = document.body.dataset.perfect === "True";
-
-    if (isPerfect) {
-        el.classList.add("clear-animation");
-    }
-
     window.onload = () => {
     const el = document.getElementById("final-score");
+
     if (el) {
     el.classList.add("clear-animation");
 

@@ -3,29 +3,22 @@ let currentProblem = null;  /* 現在の問題を保存する変数 */
 let maxNum = 0;             /* 出題される数の最大値を保存する変数 */
 let userAnswer = "";
 
-// ===== テンキー処理 =====
-let activeInput = null;
+// 正解・不正解アニメーション
+function showResultAnimation(isCorrect){
+    const el = document.getElementById("result");
 
-// フォーカスされたinputを記録
-document.addEventListener("focusin", (e) => {
-    if (e.target.classList.contains("big-input")) {
-        activeInput = e.target;
+    el.classList.remove("correct", "wrong");
+
+    if(isCorrect){
+        el.classList.add("correct");
+    }else{
+        el.classList.add("wrong");
     }
-});
 
-// キー押下
-document.addEventListener("click", (e) => {
-    if (!e.target.classList.contains("key")) return;
-    if (!activeInput) return;
-
-    const value = e.target.dataset.value;
-
-    if (value === "del") {
-        activeInput.value = activeInput.value.slice(0, -1);
-    } else {
-        activeInput.value += value;
-    }
-});
+    setTimeout(() => {
+        el.classList.remove("correct", "wrong");
+    }, 400);
+}
 
 // バイブ
 function vibrate(type){
@@ -91,9 +84,11 @@ async function submitAnswer(){
 
     if(data.is_correct){
         lastResult = "せいかい！🎉";
+        showResultAnimation(true);
         vibrate("correct");
     }else{ 
         lastResult = "おしい！";
+        showResultAnimation(false);
         vibrate("wrong");
     }
 
@@ -218,6 +213,7 @@ async function loadProblem(){
     else if(data.difficulty == 1){
         document.getElementById("choices-area").style.display="block";
         document.getElementById("input-area").style.display="none";
+        document.getElementById("keypad").style.display="none";
     }
 
     /* 難易度が1の場合のみ４択のボタン押す */
@@ -242,9 +238,11 @@ async function loadProblem(){
 
             if(data.is_correct){
                 lastResult = "せいかい！🎉";
+                showResultAnimation(true);
                 vibrate("correct");
             }else{ 
                 lastResult = "おしい！";
+                showResultAnimation(false);
                 vibrate("wrong");
             }
 
@@ -258,3 +256,28 @@ async function loadProblem(){
 if (document.getElementById("question")) {
     loadProblem();
 }
+
+// ===== テンキー処理 =====
+let activeInput = null;
+
+// フォーカスされたinputを記録
+document.addEventListener("focusin", (e) => {
+    if (e.target.classList.contains("big-input")) {
+        activeInput = e.target;
+    }
+});
+
+// キー押下
+document.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("key")) return;
+    if (!activeInput) return;
+
+    const value = e.target.dataset.value;
+
+    if (value === "del") {
+        activeInput.value = activeInput.value.slice(0, -1);
+    } else {
+        activeInput.value += value;
+    }
+});
+
