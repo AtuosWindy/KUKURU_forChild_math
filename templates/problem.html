@@ -23,22 +23,40 @@
 <div id="input-area" style="display:none;">
 
     <div id="input-int-dec">
-        <input id="answer-input" class="big-input" inputmode="numeric" >
+        <input id="answer-input" class="big-input" inputmode="numeric">
     </div>
 
     <div id="input-fraction" style="display:none;">
         <span class="fraction">
-            <span><input id="num" class="big-input" inputmode="numeric" ></span>
-            <span><input id="den" class="big-input" inputmode="numeric" ></span>
+            <span><input id="num" class="big-input" inputmode="numeric"></span>
+            <span><input id="den" class="big-input" inputmode="numeric"></span>
         </span>
     </div>
 
     <div id="input-remain" style="display:none;">
-        <input id="q" class="big-input" inputmode="numeric" > あまり <input id="r" class="big-input" inputmode="numeric" >
+        <input id="q" class="big-input" inputmode="numeric"> あまり <input id="r" class="big-input" inputmode="numeric">
     </div>
 
     <button onclick="submitAnswer()">こたえ</button>
 
+</div>
+
+<div id="keypad" style="display:none;">
+    <button class="key" data-value="7">7</button>
+    <button class="key" data-value="8">8</button>
+    <button class="key" data-value="9">9</button>
+
+    <button class="key" data-value="4">4</button>
+    <button class="key" data-value="5">5</button>
+    <button class="key" data-value="6">6</button>
+
+    <button class="key" data-value="1">1</button>
+    <button class="key" data-value="2">2</button>
+    <button class="key" data-value="3">3</button>
+
+    <button class="key" data-value="0">0</button>
+    <button class="key" data-value=".">.</button>
+    <button class="key" data-value="del">←</button>
 </div>
 
 <script src="/static/app.js"></script>

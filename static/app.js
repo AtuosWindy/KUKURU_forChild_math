@@ -3,6 +3,41 @@ let currentProblem = null;  /* 現在の問題を保存する変数 */
 let maxNum = 0;             /* 出題される数の最大値を保存する変数 */
 let userAnswer = "";
 
+// ===== テンキー処理 =====
+let activeInput = null;
+
+// フォーカスされたinputを記録
+document.addEventListener("focusin", (e) => {
+    if (e.target.classList.contains("big-input")) {
+        activeInput = e.target;
+    }
+});
+
+// キー押下
+document.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("key")) return;
+    if (!activeInput) return;
+
+    const value = e.target.dataset.value;
+
+    if (value === "del") {
+        activeInput.value = activeInput.value.slice(0, -1);
+    } else {
+        activeInput.value += value;
+    }
+});
+
+// バイブ
+function vibrate(type){
+    if(!navigator.vibrate) return;
+
+    if(type === "correct"){
+        navigator.vibrate(100);
+    }else{
+        navigator.vibrate([100, 50, 100]);
+    }
+}
+
 
 async function submitAnswer(){
 
@@ -56,8 +91,10 @@ async function submitAnswer(){
 
     if(data.is_correct){
         lastResult = "せいかい！🎉";
+        vibrate("correct");
     }else{ 
         lastResult = "おしい！";
+        vibrate("wrong");
     }
 
     loadProblem();
@@ -149,6 +186,7 @@ async function loadProblem(){
 
         document.getElementById("choices-area").style.display="none";
         document.getElementById("input-area").style.display="block";
+        document.getElementById("keypad").style.display = "grid";   // テンキー処理
 
         if(problem.answer_type == "int" || problem.answer_type == "dec"){
             document.getElementById("input-int-dec").style.display="block";
@@ -204,8 +242,10 @@ async function loadProblem(){
 
             if(data.is_correct){
                 lastResult = "せいかい！🎉";
+                vibrate("correct");
             }else{ 
                 lastResult = "おしい！";
+                vibrate("wrong");
             }
 
             loadProblem();

@@ -7,8 +7,27 @@
 <!--timeを小数点以下2桁にしたい！！-->
 <p>タイム：{{ "%.2f"|format(time) }} 秒</p>
 <p>正答率：{{ rate }} %</p>
-<p>スコア：{{ score }} 点</p>
+<p id="final-score">スコア：{{ score }} 点</p>
 
 <button onclick="location.href=`/home`">もういちど</button>
+
+<script>
+    const isPerfect = document.body.dataset.perfect === "True";
+
+    if (isPerfect) {
+        el.classList.add("clear-animation");
+    }
+
+    window.onload = () => {
+    const el = document.getElementById("final-score");
+    if (el) {
+    el.classList.add("clear-animation");
+
+    if (navigator.vibrate) {
+    navigator.vibrate([100, 50, 100, 50, 200]);
+    }
+    }
+    };
+</script>
 
 {% endblock %}

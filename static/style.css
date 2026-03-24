@@ -140,3 +140,80 @@ button {
     padding: 20px;
     font-size: 28px;
 }
+
+#keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 80%;
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+.key {
+    padding: 20px;
+    font-size: 24px;
+    border-radius: 12px;
+    background: #eee;
+}
+
+.key:active {
+    background: #ccc;
+}
+
+.correct {
+    animation: pop 0.3s ease;
+    color: #4CAF50;
+}
+
+.wrong {
+    animation: shake 0.3s ease;
+    color: red;
+}
+
+#final-score {
+    font-size: 32px;
+    margin-top: 20px;
+}
+
+.clear-animation {
+    animation: clearPop 0.8s ease;
+}
+
+@keyframes clearPop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+        color: #4CAF50;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
