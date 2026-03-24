@@ -17,5 +17,6 @@ def result(request: Request):
             "request": request,
             "time": request.session.get("time", 0),
             "rate": request.session.get("rate", 0),
+            "score": request.session.get("score", 0),
         }
     )

@@ -4,8 +4,10 @@
 
 <h1>けっか！</h1>
 
-<p>タイム：{{ time }} 秒</p>
+<!--timeを小数点以下2桁にしたい！！-->
+<p>タイム：{{ "%.2f"|format(time) }} 秒</p>
 <p>正答率：{{ rate }} %</p>
+<p>スコア：{{ score }} 点</p>
 
 <button onclick="location.href=`/home`">もういちど</button>
 

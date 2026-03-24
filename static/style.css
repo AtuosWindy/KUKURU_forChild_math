@@ -14,6 +14,12 @@
     background: #45a049;
 }
 
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+}
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -21,12 +27,9 @@ body {
     font-size: 20px;
 }
 
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
+main{
+    padding: 16px;
 }
-
 
 button {
     display: inline-block;
@@ -94,4 +97,46 @@ button {
 .fraction span:first-child {
     border-bottom: 1px solid black;
     display: block;
+}
+
+.big-input {
+    width: 80px;
+    height: 60px;
+    font-size: 28px;
+    text-align: center;
+    margin: 8px;
+}
+
+#choices-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* ボタン間の余白をしっかり確保 */
+    align-items: center;
+    margin-top: 20px;
+}
+
+.choice {
+    width: 80%; /* 横いっぱいに近くする */
+    max-width: 400px;
+    padding: 20px;
+    font-size: 24px;
+    border-radius: 12px;
+    min-height: 60px; /* 指で押しやすいサイズ */
+}
+
+#input-area {
+    margin-top: 20px;
+}
+
+#input-int-dec,
+#input-fraction,
+#input-remain {
+    margin: 16px 0;
+}
+
+#input-area button {
+    width: 80%;
+    max-width: 400px;
+    padding: 20px;
+    font-size: 28px;
 }

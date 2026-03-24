@@ -75,14 +75,14 @@ def x_mul(value, value2):
 #answer2が0→x÷3=12, 1→12÷x=3
 def x_div(value, value2):
     a = random.randint(1, value)
-    answer = random.randint(1, value2)
-    b = a * answer
+    b = random.randint(1, value2)
+    answer = a * b
     answer2 = random.randint(0,1)		#0で x÷3 = ~、1で 12÷x = ~ ...(xが4の場合)
 
     q_type = "left_op"		#normalな形ではない("="の左側ではある)けど、opの左(left)に"?"が位置する
     if answer2 == 1:
         q_type = "right_op"		#normalな形ではない("="の左側ではある)けど、opの右(right)に"?"が位置する
-        a,b = b,a
+        a,answer = answer,a
 
     return {
         "a": a,
