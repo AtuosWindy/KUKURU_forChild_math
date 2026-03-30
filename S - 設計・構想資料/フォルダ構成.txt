@@ -5,6 +5,9 @@ C:\APP\Study_Child_001_KUKURU(ローカルフォルダ)
 │
 ├ main.py                ← FastAPI入口
 │
+├ database
+｜   └ ranking.db        ←データベース 
+│
 ├ routers                ← APIルーティング
 │   ├ home.py
 │   ├ problem.py
@@ -29,7 +32,7 @@ C:\APP\Study_Child_001_KUKURU(ローカルフォルダ)
 │       ├ remain.py	←商・あまり
 │       └ fraction.py	←分数
 │
-├ models                 ← データ構造
+├ models                 ← データ構造(実はこれ今全く使ってないから消してもいいかも、、、)
 │   └ problem.py
 │
 ├ static                 ← JS / CSS

@@ -10,7 +10,22 @@
 <p>正答率：{{ rate }} %</p>
 <p id="final-score">スコア：{{ score }} 点</p>
 
-<button onclick="location.href='/home'">もういちど</button>
+<button onclick="location.href='/home'">ホームへ</button>
+
+<!--↓これ押すと、同じ"/result(後ろのオプションなしで固定)"内で画面だけ切り替わって、登録内容確認画面＆登録ボタンを表示したい！！なお、登録ボタンを押すと、結果がdbに保存され、/homeにリダイレクトする。あ、リダイレクトで思い出したけどブラウザバック対策考えないとな、、、-->
+<button id="show-register">けっかをとうろく</button>
+
+<div id="register-area" style="display: none;">
+<h2>このけっかをとうろくする？</h2>
+
+<p>ニックネーム: <input type="text" id="nickname" value="{{ nickname }}"></p>
+<p>タイム：{{ "%.2f"|format(time) }} 秒</p>
+<p>正答率：{{ rate }} %</p>
+<p>スコア：{{ score }} 点</p>
+
+<button id="save-result">とうろくする</button>
+<button id="cancel-register">もどる</button>
+</div>
 
 <script>
     window.onload = () => {
@@ -23,7 +38,56 @@
     navigator.vibrate([100, 50, 100, 50, 200]);
     }
     }
+
+    // ===== 登録UI切り替え =====
+    const showBtn = document.getElementById("show-register");
+    const registerArea = document.getElementById("register-area");
+
+    showBtn.onclick = () => {
+        showBtn.style.display = "none";
+        registerArea.style.display = "block";
+    };
+
+    document.getElementById("cancel-register").onclick = () => {
+        registerArea.style.display = "none";
+        showBtn.style.display = "inline-block";
+    };
+
+    // ===== 保存処理 =====
+    let isSubmitting = false;
+
+    document.getElementById("save-result").onclick = async () => {
+        const nickEl = document.getElementById("nickname");
+        if (!nickEl) throw new Error("nickname input not found!");
+        const nickname = nickEl.value;
+
+        if(isSubmitting) return;
+        isSubmitting = true;
+
+        const res = await fetch("/api/register", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nickname: nickname,
+            }),
+        });
+
+        const data = await res.json();
+
+        if (data.status == "ok") {
+            window.location.replace("/home");
+        } else {
+            isSubmitting = false;
+            alert("とうろくにしっぱいしたよ💦");
+        }
+    };
     };
 </script>
+
+<script src="/static/app.js"></script>
+
 
 {% endblock %}

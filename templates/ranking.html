@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>🏆 ランキング</h1>
+
+<button onclick="location.href='/home'">もどる</button>
+
+<table border="1" style="margin: 20px auto;">
+    <tr>
+        <th>順位</th>
+        <th>ニックネーム</th>
+        <th>スコア</th>
+    </tr>
+
+    {% for user in ranking %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ user.nickname }}</td>
+        <td>{{ user.score }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}

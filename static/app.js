@@ -107,7 +107,7 @@ async function loadProblem(){
 
     if(data.status == "finished"){
         /* 結果画面へ遷移 */
-        window.location.href = "/result";
+        window.location.replace("/result");
         return;
     }
     else if(data.status == "retry_prompt"){
@@ -118,7 +118,7 @@ async function loadProblem(){
             });
             loadProblem();
         } else {
-            window.location.href = "/result";
+            window.location.replace("/result");
         }
         return;
     }

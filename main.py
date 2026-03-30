@@ -6,6 +6,11 @@ from fastapi.templating import Jinja2Templates
 
 from routers import home, problem, result, ranking
 
+from database.db import engine
+from database.models import Base
+
+Base.metadata.create_all(bind=engine)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = FastAPI()

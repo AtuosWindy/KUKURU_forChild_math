@@ -1,7 +1,85 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>✨ ようこそ ✨</h1>
-<p>計算トレーニングアプリ</p>
-<button onclick="location.href=`/home`">はじめる</button>
+<div id="start-kukuru">
+    <h1>✨ ようこそ ✨</h1>
+    <p>計算トレーニングアプリ</p>
+    <button onclick="input()">はじめる</button>
+</div>
+
+<div id="regist-name-and-grade" style="display: none;">
+    <h1>ニックネームと学年をいれてね！</h1>
+    <button onclick="back()">もどる</button>
+    ニックネーム:
+    <input id="nickname" class="long-input">
+
+    <p>学年:</p>
+    <div id="grade-buttons">
+        <button class="grade-btn" onclick="selectGrade(1)">1ねん</button>
+        <button class="grade-btn" onclick="selectGrade(2)">2ねん</button>
+        <button class="grade-btn" onclick="selectGrade(3)">3ねん</button>
+        <button class="grade-btn" onclick="selectGrade(4)">4ねん</button>
+        <button class="grade-btn" onclick="selectGrade(5)">5ねん</button>
+        <button class="grade-btn" onclick="selectGrade(6)">6ねん</button>
+        <!--<button class="grade-btn" onclick="selectGrade(0)">ぜんたい</button>-->
+    </div>
+
+    <button onclick="start()">はじめる</button>
+</div>
+<script>
+    let selectedGrade = null;
+
+    function selectGrade(grade) {
+        selectedGrade = grade;
+
+        // 全ボタンの色リセット
+        document.querySelectorAll(".grade-btn").forEach(btn => {
+            btn.classList.remove("selected");
+        });
+
+        // 押されたボタンだけハイライト
+        event.target.classList.add("selected");
+    }
+
+    // UI切り替え
+    const top_page   = document.getElementById("start-kukuru");
+    const input_page = document.getElementById("regist-name-and-grade");
+
+    function input(){
+        top_page.style.display   = "none";
+        input_page.style.display = "block";
+    }
+
+    function back(){
+        top_page.style.display   = "block";
+        input_page.style.display = "none";
+    }
+
+    async function start() {
+        const nickname = document.getElementById("nickname").value;
+
+        if (!nickname) {
+            alert("ニックネームいれてね！");
+            return;
+        }
+
+        if (!selectedGrade) {
+            alert("学年えらんでね！");
+            return;
+        }
+
+        await fetch("/api/init", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nickname: nickname,
+                your_grade: selectedGrade,
+            }),
+        });
+
+        window.location.href = "/home";
+    }
+</script>
 {% endblock %}

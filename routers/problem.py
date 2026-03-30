@@ -2,7 +2,7 @@ from re import S
 from tokenize import Double
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.background import P
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
@@ -67,6 +67,7 @@ def get_problem(request: Request):
         if retry_flag:  # すでに解きなおししてる場合
             #/result へ行く処理を追加する
             status = "finished"
+            print("ニックネーム: ", request.session.get("nickname", ""))
         else:  # まだ解きなおししてない場合は、全問解き終わったけど、間違えた問題があるかもしれないので、その場合は解きなおすか問う。タイムはとめる。
             stop_time = time.time()
             watch_time = stop_time - start_time
@@ -88,8 +89,10 @@ def get_problem(request: Request):
                     status = "retry_prompt"
                 else:
                     status = "finished"
+                    print("ニックネーム: ", request.session.get("nickname", ""))
             else:  # 間違えた問題がない場合は、解きなおす必要ないので、そのまま/resultへ行く
                 status = "finished"
+                print("ニックネーム: ", request.session.get("nickname", ""))
         
 
     # retryの場合は間違えた問題を解きなおすため、問題リストを切り替える
@@ -284,17 +287,3 @@ def retry(request: Request):
     request.session["index"] = 0
     request.session["wrong_problem_count"] = len(request.session["wrong_problems"])
     return {"status": "ok"}
-
-
-@router.get("/result")
-def result(request: Request):
-    return templates.TemplateResponse(
-        request,
-        name = "result.html",
-        context = {
-            "request": request,
-            "time": request.session.get("time", 0),
-            "rate": request.session.get("rate", 0),
-            "score": request.session.get("score", 0),
-        }
-    )

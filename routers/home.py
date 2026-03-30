@@ -19,15 +19,21 @@ class StartRequest(BaseModel):
     subject: int
     difficulty: int
 
+class InitRequest(BaseModel):
+    nickname: str
+    your_grade: int
+
 
 @router.get("/home", response_class=HTMLResponse)
-def home(
+async def home(
     request: Request,
     grade: int | None = None,
     subject: int | None = None
 ):
 
     subject_names = {}
+
+    request.session["score"] = -1
 
     # セッションの初期化
     if "initialized" not in request.session:
@@ -50,7 +56,7 @@ def home(
         request.session["start_time"] = 0
         request.session["end_time"] = 0
         request.session["time"] = 0
-        request.session["score"] = 0
+        request.session["score"] = -1
         request.session["rank"] = 0
 
         request.session["initialized"] = True
@@ -117,6 +123,14 @@ def start(
     request.session["score"] = 0
     request.session["rank"] = 0
 
-    # request.session["your_grade"] = 0
-    request.session["nickname"] = ""
+    print("ニックネーム: ", request.session.get("nickname", ""))
 
+
+@router.post("/api/init")
+def init_user(request: Request, data: InitRequest):
+
+    request.session["nickname"] = data.nickname
+    print(request.session.get("nickname", ""))
+    request.session["your_grade"] = data.your_grade
+
+    return {"status": "ok"}
