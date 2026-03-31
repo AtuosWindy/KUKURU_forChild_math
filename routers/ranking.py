@@ -15,9 +15,9 @@ def get_ranking(request: Request, db: Session = Depends(get_db)):
     rankings = crud.get_rankings_all(db)
 
     ranking = [
-        {"nickname": "AAA", "score": 12000},
-        {"nickname": "BBB", "score": 10000},
-        {"nickname": "CCC", "score": 8000},
+        {"nickname": "AAA", "score": 12000, "subject_name": "たしざん", "time": 5.15, "rate": 100},
+        {"nickname": "BBB", "score": 10000, "subject_name": "たしざん", "time": 5.15, "rate": 100},
+        {"nickname": "CCC", "score": 8000, "subject_name": "たしざん", "time": 5.15, "rate": 100},
     ]
 
     return templates.TemplateResponse(
@@ -25,6 +25,6 @@ def get_ranking(request: Request, db: Session = Depends(get_db)):
         name="ranking.html",
         context={
             "request": request,
-            "ranking": ranking
+            "ranking": rankings
         }
     )

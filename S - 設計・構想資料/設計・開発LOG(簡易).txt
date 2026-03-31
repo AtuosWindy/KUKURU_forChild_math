@@ -123,4 +123,5 @@ https://kukuru-app.onrender.com/
    ： /api/register でdbにリザルト登録後、/homeにリダイレクトされない問題があったが、それも解決。
 
 [ 23日目 ( 3 / 31 [火] ) ]
-・ 
+・ Renderにて、/ranking画面が表示されないバグが発生→修正。
+

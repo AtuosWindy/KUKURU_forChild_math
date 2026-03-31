@@ -11,6 +11,9 @@
         <th>順位</th>
         <th>ニックネーム</th>
         <th>スコア</th>
+        <th>科目</th>
+        <th>タイム(秒)</th>
+        <th>正答率(%)</th>
     </tr>
 
     {% for user in ranking %}
@@ -18,6 +21,9 @@
         <td>{{ loop.index }}</td>
         <td>{{ user.nickname }}</td>
         <td>{{ user.score }}</td>
+        <td>{{ user.subject_name }}</td>
+        <td>{{ user.time }}</td>
+        <td>{{ user.rate }}</td>
     </tr>
     {% endfor %}
 
