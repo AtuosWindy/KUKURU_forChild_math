@@ -180,15 +180,15 @@ button {
 #keypad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 80%;
-    max-width: 300px;
+    gap: 15px;
+    width: 90%;
+    max-width: 400px;
     margin: 20px auto;
 }
 
 .key {
-    padding: 20px;
-    font-size: 24px;
+    padding: 30px;
+    font-size: 28px;
     border-radius: 12px;
     background: #333; /* 濃い背景 */
     color: #fff; /* 白文字 */
