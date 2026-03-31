@@ -6,6 +6,9 @@ C:\APP\Study_Child_001_KUKURU(ローカルフォルダ)
 ├ main.py                ← FastAPI入口
 │
 ├ database
+｜   ├ db.py
+｜   ├ crud.py
+｜   ├ models.py         ←実はデータ構造はこっち使ってる
 ｜   └ ranking.db        ←データベース 
 │
 ├ routers                ← APIルーティング
@@ -45,5 +48,5 @@ C:\APP\Study_Child_001_KUKURU(ローカルフォルダ)
     ├ home.html             ←「/home」
     ├ problem.html          ←「/problem」
     ├ result.html           ←「/result」
-    ├ ranking.html          ←今は未実装
+    ├ ranking.html          ←「/ranking」 : ひとまずdb呼び出さず固定値の表を表示できるか試してるところ。LocalPCではOK、あとはRenderにて。
     └ tutorial.html         ←こちらも今は未実装

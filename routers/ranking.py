@@ -21,8 +21,9 @@ def get_ranking(request: Request, db: Session = Depends(get_db)):
     ]
 
     return templates.TemplateResponse(
-        "ranking.html",
-        {
+        request,
+        name="ranking.html",
+        context={
             "request": request,
             "ranking": ranking
         }
