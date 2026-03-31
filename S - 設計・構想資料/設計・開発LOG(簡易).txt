@@ -124,4 +124,4 @@ https://kukuru-app.onrender.com/
 
 [ 23日目 ( 3 / 31 [火] ) ]
 ・ Renderにて、/ranking画面が表示されないバグが発生→修正。
-
+・ rankingも、仮の表示からdb取得し表示するものへ改修。
