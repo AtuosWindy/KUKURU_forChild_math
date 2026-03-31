@@ -9,6 +9,7 @@
 <table border="1" style="margin: 20px auto;">
     <tr>
         <th>順位</th>
+        <th>学年</th>
         <th>ニックネーム</th>
         <th>スコア</th>
         <th>科目</th>
@@ -19,6 +20,7 @@
     {% for user in ranking %}
     <tr>
         <td>{{ loop.index }}</td>
+        <td>{{ user.your_grade }}</td>
         <td>{{ user.nickname }}</td>
         <td>{{ user.score }}</td>
         <td>{{ user.subject_name }}</td>
